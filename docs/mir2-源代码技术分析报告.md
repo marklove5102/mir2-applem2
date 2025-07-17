@@ -14,9 +14,9 @@
 ### 文档图例说明
 本报告包含以下UML图例，用于直观展示系统架构和设计：
 
-- **图1**: [系统流程图](system.svg) - 游戏整体业务流程
-- **图2**: [网络交互图](network.svg) - 客户端与服务端交互流程  
-- **图3**: [实体关系图](entity.svg) - 游戏对象类继承关系
+- **图1**: 系统流程图 - 游戏整体业务流程
+- **图2**: 网络交互图 - 客户端与服务端交互流程  
+- **图3**: 实体关系图 - 游戏对象类继承关系
 
 ## 系统架构分析
 
@@ -30,7 +30,36 @@
 
 #### 系统业务流程图
 
-![系统流程图](system.svg)
+```mermaid
+graph TD
+    A["用户启动游戏"] --> B["客户端初始化"]
+    B --> C["连接登录服务器"]
+    C --> D["身份验证"]
+    D -->|成功| E["获取角色列表"]
+    D -->|失败| F["显示错误信息"]
+    F --> C
+    E --> G["选择/创建角色"]
+    G --> H["连接游戏服务器"]
+    H --> I["进入游戏世界"]
+    I --> J["游戏主循环"]
+    
+    J --> K["用户输入处理"]
+    K --> L["移动/攻击/技能"]
+    L --> M["发送指令到服务器"]
+    M --> N["服务器验证"]
+    N -->|有效| O["更新游戏状态"]
+    N -->|无效| P["拒绝操作"]
+    O --> Q["广播状态变化"]
+    P --> J
+    Q --> R["客户端接收更新"]
+    R --> S["更新画面"]
+    S --> J
+    
+    J --> T["退出游戏"]
+    T --> U["保存角色数据"]
+    U --> V["断开连接"]
+    V --> W["游戏结束"]
+```
 
 *图1：游戏系统整体业务流程，从用户启动到游戏运行的完整过程*
 
@@ -94,7 +123,85 @@ end;
 
 #### 客户端-服务端交互流程图
 
-![网络交互图](network.svg)
+```mermaid
+graph TD
+    subgraph "客户端 (MirClient)"
+        C1["启动游戏<br/>mir2.dpr"]
+        C2["初始化图形界面<br/>ClMain.pas"]
+        C3["连接网络<br/>TClientSocket"]
+        C4["发送登录请求<br/>CM_IDPASSWORD"]
+        C5["接收角色列表<br/>SM_QUERYCHR"]
+        C6["选择角色<br/>CM_SELECTSERVER"]
+        C7["进入游戏世界<br/>PlayScn.pas"]
+        C8["处理用户输入<br/>键盘/鼠标事件"]
+        C9["发送移动指令<br/>CM_WALK/CM_RUN"]
+        C10["发送攻击指令<br/>CM_HIT"]
+        C11["接收游戏状态<br/>SM_*消息"]
+        C12["更新角色显示<br/>Actor.pas"]
+        C13["渲染游戏画面<br/>DrawScrn.pas"]
+    end
+    
+    subgraph "服务端 (M2Engine)"
+        S1["启动服务器<br/>M2Server.dpr"]
+        S2["初始化游戏引擎<br/>svMain.pas"]
+        S3["监听网络连接<br/>RunSock.pas"]
+        S4["验证用户身份<br/>IdSrvClient.pas"]
+        S5["加载角色数据<br/>ObjPlay.pas"]
+        S6["创建玩家对象<br/>TPlayObject"]
+        S7["处理移动逻辑<br/>ClientWalkXY"]
+        S8["处理攻击逻辑<br/>ClientHitXY"]
+        S9["更新游戏世界<br/>Envir.pas"]
+        S10["处理NPC交互<br/>ObjNpc.pas"]
+        S11["处理怪物AI<br/>ObjMon.pas"]
+        S12["广播状态变化<br/>SendRefMsg"]
+        S13["保存角色数据<br/>LocalDB.pas"]
+    end
+    
+    subgraph "网络通信层"
+        N1["TCP Socket连接"]
+        N2["消息编码/解码"]
+        N3["消息队列处理"]
+    end
+    
+    C1 --> C2
+    C2 --> C3
+    C3 --> N1
+    N1 --> S3
+    S3 --> S2
+    S2 --> S1
+    
+    C4 --> N2
+    N2 --> S4
+    S4 --> S5
+    S5 --> S6
+    S6 --> N2
+    N2 --> C5
+    
+    C6 --> N2
+    N2 --> S6
+    S6 --> C7
+    
+    C8 --> C9
+    C9 --> N3
+    N3 --> S7
+    S7 --> S9
+    
+    C8 --> C10
+    C10 --> N3
+    N3 --> S8
+    S8 --> S11
+    
+    S9 --> S12
+    S11 --> S12
+    S12 --> N3
+    N3 --> C11
+    
+    C11 --> C12
+    C12 --> C13
+    C13 --> C8
+    
+    S9 --> S13
+```
 
 *图2：客户端与服务端详细交互流程，展示从连接建立到游戏运行的完整网络通信过程*
 
@@ -118,7 +225,129 @@ TBaseObject (基础对象)
 
 #### 游戏对象类关系图
 
-![实体关系图](entity.svg)
+```mermaid
+classDiagram
+    class TBaseObject {
+        +string m_sCharName
+        +integer m_nCurrX
+        +integer m_nCurrY
+        +byte m_btDirection
+        +TAbility m_Abil
+        +boolean m_boDeath
+        +TEnvirnoment m_PEnvir
+        +Initialize()
+        +Run()
+        +AttackDir()
+        +Die()
+    }
+    
+    class TAnimalObject {
+        +integer m_nViewRange
+        +longword m_dwSearchTick
+        +boolean m_boAnimal
+        +SearchTarget()
+        +GetPoseCreate()
+    }
+    
+    class TPlayObject {
+        +string m_sUserID
+        +string m_sIPaddr
+        +TUserItem m_UseItems[13]
+        +TGuild m_MyGuild
+        +ClientWalkXY()
+        +ClientRunXY()
+        +ClientHitXY()
+        +SendSocket()
+    }
+    
+    class TMonster {
+        +longword m_dwThinkTick
+        +boolean m_boDupMode
+        +Think()
+        +AttackTarget()
+        +MakeClone()
+    }
+    
+    class TNormNpc {
+        +TList m_ScriptList
+        +string m_sFilePath
+        +boolean m_boIsHide
+        +Click()
+        +UserSelect()
+        +LoadNpcScript()
+    }
+    
+    class TMerchant {
+        +string m_sScript
+        +boolean m_boCastle
+        +integer m_nPriceRate
+        +SellItem()
+        +BuyItem()
+        +RepairItem()
+    }
+    
+    class TGuardUnit {
+        +integer m_nDirection
+        +IsProperTarget()
+        +Struck()
+    }
+    
+    class TATMonster {
+        +AttackTarget()
+        +Run()
+    }
+    
+    class TSpitSpider {
+        +boolean m_boUsePoison
+        +SpitAttack()
+    }
+    
+    class TScultureMonster {
+        +MeltStone()
+        +MeltStoneAll()
+    }
+    
+    class TDoubleATKMonster {
+        +longword m_dwNextHitTime
+        +boolean m_boDeliria
+        +BeginDeliria()
+        +EndDeliria()
+    }
+    
+    class TCastleDoor {
+        +boolean m_boOpened
+        +Open()
+        +Close()
+        +RefStatus()
+    }
+    
+    class TWallStructure {
+        +boolean boSetMapFlaged
+        +RefStatus()
+    }
+    
+    TBaseObject <|-- TAnimalObject
+    TAnimalObject <|-- TPlayObject
+    TAnimalObject <|-- TMonster
+    TAnimalObject <|-- TNormNpc
+    TAnimalObject <|-- TGuardUnit
+    
+    TMonster <|-- TATMonster
+    TMonster <|-- TDoubleATKMonster
+    TMonster <|-- TScultureMonster
+    
+    TATMonster <|-- TSpitSpider
+    
+    TNormNpc <|-- TMerchant
+    
+    TGuardUnit <|-- TCastleDoor
+    TGuardUnit <|-- TWallStructure
+    
+    note for TPlayObject "玩家对象<br/>处理所有玩家相关的逻辑<br/>包括移动、攻击、技能等"
+    note for TMonster "怪物基类<br/>包含基本的AI逻辑"
+    note for TNormNpc "NPC基类<br/>支持脚本系统"
+    note for TMerchant "商人NPC<br/>处理买卖交易"
+```
 
 *图3：游戏对象完整的类继承关系和结构设计，展示各类对象的层次关系和核心属性方法*
 
