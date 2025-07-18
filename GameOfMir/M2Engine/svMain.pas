@@ -12,6 +12,11 @@ uses
 
 const
   WM_RUN_OK = WM_USER + 1080;
+  // 网络安全常量
+  MAX_PACKET_SIZE = 64 * 1024;     // 最大数据包大小 64KB
+  MAX_BUFFER_SIZE = 512 * 1024;    // 最大缓冲区大小 512KB
+  MIN_PACKET_SIZE = 2;             // 最小数据包大小
+  MAX_RECV_SIZE_PER_TICK = 256 * 1024; // 每次最大接收大小 256KB
 
 type
   TFrmMain = class(TForm)
@@ -174,6 +179,7 @@ type
   private
     boServiceStarted: Boolean;
     boRunTimerRun: Boolean;
+    dwCloseStartTick: LongWord;  // 记录开始关闭的时间
     procedure Timer1Timer(Sender: TObject);
     procedure StartTimerTimer(Sender: TObject);
     procedure CloseTimerTimer(Sender: TObject);
@@ -414,6 +420,12 @@ begin
     Config.WriteInteger('Setup', 'WinLotteryLevel5', g_Config.nWinLotteryLevel5);
     Config.WriteInteger('Setup', 'WinLotteryLevel6', g_Config.nWinLotteryLevel6);
   except
+    on E: EIniFileException do
+      MainOutMessage(Format('配置文件写入错误: %s', [E.Message]));
+    on E: EInOutError do
+      MainOutMessage(Format('文件IO错误: %s (错误码: %d)', [E.Message, E.ErrorCode]));
+    on E: Exception do
+      MainOutMessage(Format('保存配置数据时出现未知错误: %s', [E.Message]));
   end;
 end;
 
@@ -434,8 +446,40 @@ begin
 end;
 
 procedure TFrmMain.OnProgramException(Sender: TObject; E: Exception);
+resourcestring
+  sUnhandledException = '[程序异常] %s: %s';
+  sUnhandledExceptionDetail = '[程序异常详情] 发送者: %s, 异常类型: %s, 消息: %s';
+  sCriticalException = '[严重异常] %s';
 begin
-  MainOutMessage(E.Message);
+  // 根据异常类型提供不同级别的错误信息
+  if E is EOutOfMemory then begin
+    MainOutMessage(Format(sCriticalException, ['内存不足 - ' + E.Message]));
+  end
+  else if E is EAccessViolation then begin
+    MainOutMessage(Format(sCriticalException, ['访问冲突 - ' + E.Message]));
+  end
+  else if E is EStackOverflow then begin
+    MainOutMessage(Format(sCriticalException, ['堆栈溢出 - ' + E.Message]));
+  end
+  else if E is ESocketError then begin
+    MainOutMessage(Format(sUnhandledException, ['网络错误', E.Message]));
+  end
+  else if E is EDatabaseError then begin
+    MainOutMessage(Format(sUnhandledException, ['数据库错误', E.Message]));
+  end
+  else begin
+    // 提供详细的异常信息用于调试
+    if Assigned(Sender) then
+      MainOutMessage(Format(sUnhandledExceptionDetail, [Sender.ClassName, E.ClassName, E.Message]))
+    else
+      MainOutMessage(Format(sUnhandledExceptionDetail, ['Unknown', E.ClassName, E.Message]));
+  end;
+  
+  // 对于严重异常，记录额外的系统状态信息
+  if (E is EOutOfMemory) or (E is EAccessViolation) or (E is EStackOverflow) then begin
+    MainOutMessage(Format('系统状态 - 在线玩家: %d, 运行时间: %d分钟', 
+      [UserEngine.OnlinePlayCount, (GetTickCount - g_dwStartTick) div 60000]));
+  end;
 end;
 
 procedure TFrmMain.DBSocketError(Sender: TObject; Socket: TCustomWinSocket;
@@ -447,23 +491,71 @@ end;
 
 procedure TFrmMain.DBSocketRead(Sender: TObject; Socket: TCustomWinSocket);
 var
-//  tStr: string;
   nMsgLen: Integer;
   tBuffer: PChar;
+  nNewBuffSize: Integer;
+  bValidPacket: Boolean;
 begin
   nMsgLen := Socket.ReceiveLength;
-  if nMsgLen > 0 then begin
+  
+  // 安全验证1: 检查数据包大小是否在合理范围内
+  if (nMsgLen <= 0) or (nMsgLen > MAX_PACKET_SIZE) then begin
+    MainOutMessage(Format('无效的数据包大小: %d 字节, 连接将被断开', [nMsgLen]));
+    Socket.Close;
+    Exit;
+  end;
+
+  // 安全验证2: 检查单次接收大小限制
+  if nMsgLen > MAX_RECV_SIZE_PER_TICK then begin
+    MainOutMessage(Format('数据包过大: %d 字节, 超过单次接收限制 %d 字节', [nMsgLen, MAX_RECV_SIZE_PER_TICK]));
+    Socket.Close;
+    Exit;
+  end;
+
+  tBuffer := nil;
+  try
     GetMem(tBuffer, nMsgLen);
     nMsgLen := Socket.ReceiveBuf(tBuffer^, nMsgLen);
+    
+    // 验证实际接收的数据大小
+    if nMsgLen <= 0 then begin
+      Exit;
+    end;
+
+    // 基本数据包格式验证
+    bValidPacket := (nMsgLen >= MIN_PACKET_SIZE);
+    if not bValidPacket then begin
+      MainOutMessage(Format('数据包格式无效: 大小 %d 字节小于最小要求 %d 字节', [nMsgLen, MIN_PACKET_SIZE]));
+      Exit;
+    end;
+
     EnterCriticalSection(UserDBSection);
     try
-      ReallocMem(g_Config.pDBSocketRecvBuff, g_Config.nDBSocketRecvLeng + nMsgLen);
+      // 安全验证3: 检查缓冲区总大小限制
+      nNewBuffSize := g_Config.nDBSocketRecvLeng + nMsgLen;
+      if nNewBuffSize > MAX_BUFFER_SIZE then begin
+        MainOutMessage(Format('缓冲区溢出保护: 总大小 %d 字节超过限制 %d 字节, 重置缓冲区', [nNewBuffSize, MAX_BUFFER_SIZE]));
+        // 重置缓冲区而不是继续累积
+        if g_Config.pDBSocketRecvBuff <> nil then begin
+          FreeMem(g_Config.pDBSocketRecvBuff);
+          g_Config.pDBSocketRecvBuff := nil;
+        end;
+        g_Config.nDBSocketRecvLeng := 0;
+        Exit;
+      end;
+
+      // 安全的内存重分配
+      ReallocMem(g_Config.pDBSocketRecvBuff, nNewBuffSize);
       Move(tBuffer^, g_Config.pDBSocketRecvBuff[g_Config.nDBSocketRecvLeng], nMsgLen);
       Inc(g_Config.nDBSocketRecvLeng, nMsgLen);
     finally
       LeaveCriticalSection(UserDBSection);
     end;
-    FreeMem(tBuffer);
+  finally
+    if tBuffer <> nil then begin
+      FreeMem(tBuffer);
+      tBuffer := nil;
+    end;
   end;
   {EnterCriticalSection(UserDBSection);
   try
@@ -538,7 +630,12 @@ begin
         end;
         boWriteLog := False;
       except
-        MemoLog.Lines.Add('保存日志信息出错.');
+        on E: EInOutError do
+          MemoLog.Lines.Add(Format('保存日志文件IO错误: %s (错误码: %d)', [E.Message, E.ErrorCode]));
+        on E: EAccessViolation do
+          MemoLog.Lines.Add(Format('日志文件访问冲突: %s', [E.Message]));
+        on E: Exception do
+          MemoLog.Lines.Add(Format('保存日志信息出错: %s', [E.Message]));
       end;
     end;
     for i := 0 to MainLogMsgList.Count - 1 do begin
@@ -568,7 +665,20 @@ begin
         Inc(g_nSendLogCount);
         IdUDPClientLog.Send(string(ABuffer));
       except
-        Inc(g_nSendLogErrorCount);
+        on E: ESocketError do begin
+          Inc(g_nSendLogErrorCount);
+          if g_nSendLogErrorCount mod 100 = 1 then // 每100次错误记录一次详细信息
+            MainOutMessage(Format('UDP日志发送网络错误: %s', [E.Message]));
+        end;
+        on E: EAccessViolation do begin
+          Inc(g_nSendLogErrorCount);
+          MainOutMessage(Format('UDP日志发送访问冲突: %s', [E.Message]));
+        end;
+        on E: Exception do begin
+          Inc(g_nSendLogErrorCount);
+          if g_nSendLogErrorCount mod 50 = 1 then // 每50次错误记录一次
+            MainOutMessage(Format('UDP日志发送未知错误: %s', [E.Message]));
+        end;
         Continue;
       end;
     end;
@@ -1189,7 +1299,18 @@ begin
 
     boSaveData := True;
   except
-    MainOutMessage('服务启动时出现异常错误 .');
+    on E: EOutOfMemory do
+      MainOutMessage(Format('服务启动时内存不足: %s', [E.Message]));
+    on E: EAccessViolation do
+      MainOutMessage(Format('服务启动时访问冲突: %s', [E.Message]));
+    on E: EInOutError do
+      MainOutMessage(Format('服务启动时文件IO错误: %s (错误码: %d)', [E.Message, E.ErrorCode]));
+    on E: ESocketError do
+      MainOutMessage(Format('服务启动时网络错误: %s', [E.Message]));
+    on E: EDatabaseError do
+      MainOutMessage(Format('服务启动时数据库错误: %s', [E.Message]));
+    on E: Exception do
+      MainOutMessage(Format('服务启动时出现异常错误: %s (类型: %s)', [E.Message, E.ClassName]));
   end;
 end;
    {
@@ -1334,26 +1455,97 @@ begin
   CanClose := False;
   if Application.MessageBox(PChar(sCloseServerYesNo), PChar(sCloseServerTitle), MB_YESNO + MB_ICONQUESTION) = mrYes then begin
     g_boExitServer := True;
+    dwCloseStartTick := GetTickCount; // 记录开始关闭的时间
     CloseGateSocket();
     g_Config.boKickAllUser := True;
     // RunSocket.CloseAllGate;
     //    GateSocket.Close;
     CloseTimer.Enabled := True;
+    MainOutMessage('开始优雅关闭服务器...');
   end;
 end;
 
 procedure TFrmMain.CloseTimerTimer(Sender: TObject);
+const
+  MAX_CLOSE_WAIT_TIME = 30000; // 最大等待关闭时间 30秒
+  FORCE_CLOSE_TIME = 60000;    // 强制关闭时间 60秒
 resourcestring
-  sCloseServer = '%s [正在关闭服务器(%d/%d/%d)...]';
+  sCloseServer = '%s [正在关闭服务器(%d/%d/%d)...剩余时间:%ds]';
   sCloseServer1 = '%s [服务器已关闭]';
+  sForceCloseWarning = '服务器关闭超时，将强制关闭所有连接';
+  sForceCloseServer = '%s [强制关闭服务器]';
+var
+  dwElapsedTime: LongWord;
+  nRemainingTime: Integer;
+  boForceClose: Boolean;
 begin
-  Caption := Format(sCloseServer, [g_Config.sServerName, UserEngine.PlayObjectCount,
-    FrontEngine.SaveListCount, UserEMail.MsgCount]);
-  if (UserEngine.PlayObjectCount = 0) and FrontEngine.IsIdle and UserEMail.IsIdle then begin
-    CloseTimer.Enabled := False;
-    Caption := Format(sCloseServer1, [g_Config.sServerName]);
-    StopService;
-    Close;
+  dwElapsedTime := GetTickCount - dwCloseStartTick;
+  boForceClose := dwElapsedTime > FORCE_CLOSE_TIME;
+  
+  // 计算剩余等待时间
+  if dwElapsedTime < MAX_CLOSE_WAIT_TIME then
+    nRemainingTime := (MAX_CLOSE_WAIT_TIME - dwElapsedTime) div 1000
+  else
+    nRemainingTime := 0;
+
+  try
+    Caption := Format(sCloseServer, [g_Config.sServerName, 
+      UserEngine.PlayObjectCount, FrontEngine.SaveListCount, 
+      UserEMail.MsgCount, nRemainingTime]);
+    
+    // 检查是否可以正常关闭
+    if (UserEngine.PlayObjectCount = 0) and FrontEngine.IsIdle and UserEMail.IsIdle then begin
+      CloseTimer.Enabled := False;
+      Caption := Format(sCloseServer1, [g_Config.sServerName]);
+      MainOutMessage('所有玩家已下线，服务器正常关闭');
+      StopService;
+      Close;
+      Exit;
+    end;
+    
+    // 超时处理
+    if boForceClose then begin
+      CloseTimer.Enabled := False;
+      Caption := Format(sForceCloseServer, [g_Config.sServerName]);
+      MainOutMessage(sForceCloseWarning);
+      
+      // 强制断开所有连接
+      try
+        if Assigned(UserEngine) then begin
+          UserEngine.KickAllPlayObject;
+          Sleep(1000); // 等待1秒让踢人消息发送
+        end;
+      except
+        on E: Exception do
+          MainOutMessage(Format('强制断开连接时出错: %s', [E.Message]));
+      end;
+      
+      StopService;
+      Close;
+      Exit;
+    end;
+    
+    // 超过正常等待时间但未达到强制关闭时间，开始强制踢人
+    if dwElapsedTime > MAX_CLOSE_WAIT_TIME then begin
+      try
+        if Assigned(UserEngine) and (UserEngine.PlayObjectCount > 0) then begin
+          UserEngine.KickAllPlayObject;
+          MainOutMessage(Format('正在强制断开剩余 %d 个玩家连接', [UserEngine.PlayObjectCount]));
+        end;
+      except
+        on E: Exception do
+          MainOutMessage(Format('强制踢人时出错: %s', [E.Message]));
+      end;
+    end;
+    
+  except
+    on E: Exception do begin
+      MainOutMessage(Format('关闭定时器异常: %s', [E.Message]));
+      // 异常情况下强制关闭
+      CloseTimer.Enabled := False;
+      StopService;
+      Close;
+    end;
   end;
 end;
 
@@ -1765,87 +1957,244 @@ var
 {$IF DBSOCKETMODE = THREADENGINE}
   ThreadInfo: pTThreadInfo;
 {$IFEND}
+resourcestring
+  sStopServiceException = '[Exception] StopService: %s';
 begin
+  Config := @g_Config;
+  
+  // 第一阶段：停止定时器和网络连接
   try
     //SaveUnFriendList;
     Timer1.Enabled := False;
     SaveVariableTimer.Enabled := False;
-    Timer1Timer(Timer1);
     RunTimer.Enabled := False;
-    FrontEngine.Terminate();
-    //UserEMail.FreeInitialize;
-    UserEMail.Terminate;
+    ConnectTimer.Enabled := False;
+    
+    // 安全保存配置
+    try
+      Timer1Timer(Timer1);
+      SaveItemNumber(True);
+    except
+      on E: Exception do
+        MainOutMessage(Format('保存配置时出错: %s', [E.Message]));
+    end;
+    
+  except
+    on E: Exception do
+      MainOutMessage(Format(sStopServiceException, [E.Message]));
+  end;
 
-    Config := @g_Config;
+  // 第二阶段：停止引擎和服务
+  try
+    if Assigned(FrontEngine) then begin
+      FrontEngine.Terminate();
+      FrontEngine.Free;
+      FrontEngine := nil;
+    end;
+    
+    if Assigned(UserEMail) then begin
+      UserEMail.Terminate;
+      UserEMail.Free;
+      UserEMail := nil;
+    end;
+  except
+    on E: Exception do
+      MainOutMessage(Format('停止引擎时出错: %s', [E.Message]));
+  end;
+  // 第三阶段：清理插件和管理器
+  try
     {$IFDEF PLUGOPEN}
-    PlugInEngine.Free;
-    zPlugOfEngine.Free;
+    if Assigned(PlugInEngine) then begin
+      PlugInEngine.Free;
+      PlugInEngine := nil;
+    end;
+    if Assigned(zPlugOfEngine) then begin
+      zPlugOfEngine.Free;
+      zPlugOfEngine := nil;
+    end;
     {$ENDIF}
-    ShopEngine.SaveShopItems(False);
-    ShopEngine.Freeinitialize;
-    UnInitCoralWry();
-    //zPlugOfEngine.Free;
+    
+    // 保存商店数据并清理
+    try
+      if Assigned(ShopEngine) then begin
+        ShopEngine.SaveShopItems(False);
+        ShopEngine.Freeinitialize;
+      end;
+    except
+      on E: Exception do
+        MainOutMessage(Format('清理商店引擎时出错: %s', [E.Message]));
+    end;
+    
+    try
+      UnInitCoralWry();
+    except
+      on E: Exception do
+        MainOutMessage(Format('清理IP查询时出错: %s', [E.Message]));
+    end;
+  except
+    on E: Exception do
+      MainOutMessage(Format('清理插件时出错: %s', [E.Message]));
+  end;
 
-
-    FrmIDSoc.Close;
-    GateSocket.Close;
+  // 第四阶段：关闭网络连接
+  try
+    if Assigned(FrmIDSoc) then
+      FrmIDSoc.Close;
+    if Assigned(GateSocket) then
+      GateSocket.Close;
+    if Assigned(DBSocket) then
+      DBSocket.Close;
     Memo := nil;
-    SaveItemNumber(True);
-    g_CastleManager.Free;
+  except
+    on E: Exception do
+      MainOutMessage(Format('关闭网络连接时出错: %s', [E.Message]));
+  end;
 
+  // 第五阶段：停止数据库线程
 {$IF DBSOCKETMODE = THREADENGINE}
+  try
     ThreadInfo := @Config.DBSocketThread;
     ThreadInfo.boTerminaled := True;
     if WaitForSingleObject(ThreadInfo.hThreadHandle, 1000) <> 0 then begin
       SuspendThread(ThreadInfo.hThreadHandle);
     end;
+  except
+    on E: Exception do
+      MainOutMessage(Format('停止数据库线程时出错: %s', [E.Message]));
+  end;
 {$IFEND}
 
-    FrontEngine.Free;
-    UserEMail.Free;
-    MagicManager.Free;
+  // 第六阶段：清理主要管理器对象
+  try
+    if Assigned(MagicManager) then begin
+      MagicManager.Free;
+      MagicManager := nil;
+    end;
 
-    UserEngine.Free;
+    if Assigned(UserEngine) then begin
+      UserEngine.Free;
+      UserEngine := nil;
+    end;
 
-    RobotManage.Free;
+    if Assigned(RobotManage) then begin
+      RobotManage.Free;
+      RobotManage := nil;
+    end;
 
-    RunSocket.Free;
+    if Assigned(RunSocket) then begin
+      RunSocket.Free;
+      RunSocket := nil;
+    end;
 
-    ConnectTimer.Enabled := False;
-    DBSocket.Close;
+    if Assigned(g_CastleManager) then begin
+      g_CastleManager.Free;
+      g_CastleManager := nil;
+    end;
+  except
+    on E: Exception do
+      MainOutMessage(Format('清理管理器对象时出错: %s', [E.Message]));
+  end;
 
+  // 第七阶段：清理全局列表和缓冲区
+  try
+    // 清理网络缓冲区
+    EnterCriticalSection(UserDBSection);
+    try
+      if Config.pDBSocketRecvBuff <> nil then begin
+        FreeMem(Config.pDBSocketRecvBuff);
+        Config.pDBSocketRecvBuff := nil;
+      end;
+      Config.nDBSocketRecvLeng := 0;
+    finally
+      LeaveCriticalSection(UserDBSection);
+    end;
+    
+    // 清理日志列表
     FreeAndNil(MainLogMsgList);
     FreeAndNil(LogStringList);
     FreeAndNil(LogonCostLogList);
-    g_MapManager.Free;
-    g_FBMapManager.Free;
-    ItemUnit.Free;
-
-    //NoticeManager.Free;
-    g_GuildManager.Free;
-
-    for i := 0 to g_MakeItemList.Count - 1 do begin
-      Dispose(pTMakeItem(g_MakeItemList[i]));
+    
+    // 清理管理器
+    if Assigned(g_MapManager) then begin
+      g_MapManager.Free;
+      g_MapManager := nil;
     end;
-    for i := 0 to g_StartPointList.Count - 1 do begin
-      DisPose(pTStartPoint(g_StartPointList.Objects[i]));
+    if Assigned(g_FBMapManager) then begin
+      g_FBMapManager.Free;
+      g_FBMapManager := nil;
     end;
-    FreeAndNil(g_StartPointList);
+    if Assigned(ItemUnit) then begin
+      ItemUnit.Free;
+      ItemUnit := nil;
+    end;
+    if Assigned(g_GuildManager) then begin
+      g_GuildManager.Free;
+      g_GuildManager := nil;
+    end;
+  except
+    on E: Exception do
+      MainOutMessage(Format('清理全局列表时出错: %s', [E.Message]));
+  end;
+
+  // 第八阶段：清理动态分配的列表项
+  try
+    // 清理制作物品列表
+    if Assigned(g_MakeItemList) then begin
+      for i := 0 to g_MakeItemList.Count - 1 do begin
+        if g_MakeItemList[i] <> nil then begin
+          Dispose(pTMakeItem(g_MakeItemList[i]));
+          g_MakeItemList[i] := nil;
+        end;
+      end;
+    end;
+    
+    // 清理起始点列表
+    if Assigned(g_StartPointList) then begin
+      for i := 0 to g_StartPointList.Count - 1 do begin
+        if g_StartPointList.Objects[i] <> nil then begin
+          DisPose(pTStartPoint(g_StartPointList.Objects[i]));
+          g_StartPointList.Objects[i] := nil;
+        end;
+      end;
+      FreeAndNil(g_StartPointList);
+    end;
     
     FreeAndNil(g_BoxsList);
 
-    for i := 0 to g_MapQuestList.Count - 1 do begin
-      DisPose(pTQuestInfo(g_MapQuestList[i]));
+    // 清理地图任务列表
+    if Assigned(g_MapQuestList) then begin
+      for i := 0 to g_MapQuestList.Count - 1 do begin
+        if g_MapQuestList[i] <> nil then begin
+          DisPose(pTQuestInfo(g_MapQuestList[i]));
+          g_MapQuestList[i] := nil;
+        end;
+      end;
+      FreeAndNil(g_MapQuestList);
     end;
-    FreeAndNil(g_MapQuestList);
 
-    for I := 0 to g_SetItemsList.Count - 1 do begin
-      Dispose(pTSetItems(g_SetItemsList[I])); 
+    // 清理套装列表
+    if Assigned(g_SetItemsList) then begin
+      for I := 0 to g_SetItemsList.Count - 1 do begin
+        if g_SetItemsList[I] <> nil then begin
+          Dispose(pTSetItems(g_SetItemsList[I]));
+          g_SetItemsList[I] := nil;
+        end;
+      end;
     end;
 
-    for I := 0 to g_CompoundInfoList.Count - 1 do begin
-      Dispose(pTCompoundInfos(g_CompoundInfoList.Objects[I])); 
+    // 清理合成信息列表
+    if Assigned(g_CompoundInfoList) then begin
+      for I := 0 to g_CompoundInfoList.Count - 1 do begin
+        if g_CompoundInfoList.Objects[I] <> nil then begin
+          Dispose(pTCompoundInfos(g_CompoundInfoList.Objects[I]));
+          g_CompoundInfoList.Objects[I] := nil;
+        end;
+      end;
     end;
+  except
+    on E: Exception do
+      MainOutMessage(Format('清理动态分配列表时出错: %s', [E.Message]));
+  end;
 
     FreeAndNil(g_MakeItemList);
     FreeAndNil(ServerTableList);

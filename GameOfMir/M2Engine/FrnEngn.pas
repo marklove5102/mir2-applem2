@@ -137,13 +137,25 @@ var
 //  nRecog: Integer;
 //  sStr: string;
   nCheckCode: Integer;
+  // 优化临界区使用：收集要删除的记录
+  CompletedSaveRecords: TList;
+  RetrySaveRecords: TList;
+  NewLoadRecords: TList;
+resourcestring
+  sProcessGameDateException = '[Exception] TFrontEngine.ProcessGameDate - Code: %d, Error: %s';
 begin
   //  ChangeGoldList := nil;
   nCheckCode := 0;
+  
+  // 初始化临时列表
+  CompletedSaveRecords := TList.Create;
+  RetrySaveRecords := TList.Create;
+  NewLoadRecords := TList.Create;
+  
   Try
+    // 第一次临界区：获取待处理数据的快照
     EnterCriticalSection(m_UserCriticalSection);
     try
-
       for I := 0 to m_SaveRcdList.Count - 1 do begin
         m_SaveRcdTempList.Add(m_SaveRcdList.Items[I]);
       end;
@@ -183,18 +195,8 @@ begin
           TPlayObject(SaveRcd.PlayObject).m_boRcdSaved := True;
         end;      }
         nCheckCode := 5;
-        EnterCriticalSection(m_UserCriticalSection);
-        try
-          for II := 0 to m_SaveRcdList.Count - 1 do begin
-            if m_SaveRcdList.Items[II] = SaveRcd then begin
-              m_SaveRcdList.Delete(II);
-              Dispose(SaveRcd);
-              break;
-            end;
-          end;
-        finally
-          LeaveCriticalSection(m_UserCriticalSection);
-        end;
+        // 收集要删除的记录，避免立即进入临界区
+        CompletedSaveRecords.Add(SaveRcd);
       end
       else begin
         nCheckCode := 6;
@@ -224,18 +226,8 @@ begin
           end;
           {$ENDIF}
           nCheckCode := 8;
-          EnterCriticalSection(m_UserCriticalSection);
-          try
-            for II := 0 to m_SaveRcdList.Count - 1 do begin
-              if m_SaveRcdList.Items[II] = SaveRcd then begin
-                m_SaveRcdList.Delete(II);
-                Dispose(SaveRcd);
-                break;
-              end;
-            end;
-          finally
-            LeaveCriticalSection(m_UserCriticalSection);
-          end;
+          // 收集要删除的记录
+          CompletedSaveRecords.Add(SaveRcd);
         end;
         nCheckCode := 9;
         if boSaveRcd then begin
@@ -257,18 +249,8 @@ begin
             end;
             {$ENDIF}
             nCheckCode := 11;
-            EnterCriticalSection(m_UserCriticalSection);
-            try
-              for II := 0 to m_SaveRcdList.Count - 1 do begin
-                if m_SaveRcdList.Items[II] = SaveRcd then begin
-                  m_SaveRcdList.Delete(II);
-                  Dispose(SaveRcd);
-                  break;
-                end;
-              end;
-            finally
-              LeaveCriticalSection(m_UserCriticalSection);
-            end;
+            // 收集要删除的记录
+            CompletedSaveRecords.Add(SaveRcd);
           end
           else begin //保存失败
             nCheckCode := 12;
@@ -291,15 +273,35 @@ begin
       end
       else begin //如果读取人物数据失败(数据还没有保存),则重新加入队列
         nCheckCode := 16;
-        EnterCriticalSection(m_UserCriticalSection);
-        try
-          m_LoadRcdList.Add(LoadDBInfo);
-        finally
-          LeaveCriticalSection(m_UserCriticalSection);
-        end;
+        // 收集要重新加入的记录
+        NewLoadRecords.Add(LoadDBInfo);
       end;
     end;
     m_LoadRcdTempList.Clear;
+    
+    // 批量处理：一次性处理所有临界区操作
+    nCheckCode := 17;
+    EnterCriticalSection(m_UserCriticalSection);
+    try
+      // 批量删除已完成的保存记录
+      for I := CompletedSaveRecords.Count - 1 downto 0 do begin
+        SaveRcd := CompletedSaveRecords[I];
+        for II := 0 to m_SaveRcdList.Count - 1 do begin
+          if m_SaveRcdList.Items[II] = SaveRcd then begin
+            m_SaveRcdList.Delete(II);
+            Dispose(SaveRcd);
+            break;
+          end;
+        end;
+      end;
+      
+      // 批量添加需要重试的加载记录
+      for I := 0 to NewLoadRecords.Count - 1 do begin
+        m_LoadRcdList.Add(NewLoadRecords[I]);
+      end;
+    finally
+      LeaveCriticalSection(m_UserCriticalSection);
+    end;
 
     for I := 0 to m_DBServerTempList.Count - 1 do begin
       {if SendDBserverMsg(0, nIdent, nRecog, sStr, m_DBServerTempList.Strings[I]) then begin
@@ -314,10 +316,39 @@ begin
     end;
   Except
     on E:Exception do begin
-      MainOutMessage(E.Message);
-      MainOutMessage('[Exception] TFrontEngine.ProcessGameDate -> Code ' + IntToStr(nCheckCode));
+      MainOutMessage(Format(sProcessGameDateException, [nCheckCode, E.Message]));
+      // 异常时尽可能清理资源
+      try
+        EnterCriticalSection(m_UserCriticalSection);
+        try
+          // 清理已完成的记录
+          for I := 0 to CompletedSaveRecords.Count - 1 do begin
+            SaveRcd := CompletedSaveRecords[I];
+            for II := 0 to m_SaveRcdList.Count - 1 do begin
+              if m_SaveRcdList.Items[II] = SaveRcd then begin
+                m_SaveRcdList.Delete(II);
+                Dispose(SaveRcd);
+                break;
+              end;
+            end;
+          end;
+        finally
+          LeaveCriticalSection(m_UserCriticalSection);
+        end;
+      except
+        // 忽略清理过程中的异常
+      end;
     end;
   End;
+  
+  // 清理临时列表
+  try
+    CompletedSaveRecords.Free;
+    RetrySaveRecords.Free;
+    NewLoadRecords.Free;
+  except
+    // 忽略清理异常
+  end;
 end;
 
 function TFrontEngine.IsFull: Boolean;

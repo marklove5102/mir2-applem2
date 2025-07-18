@@ -4,6 +4,12 @@ interface
 uses
   Windows, Classes, SysUtils, StrUtils, SyncObjs, JSocket, ObjBase, ObjPlay, Grobal2,
   FrnEngn, UsrEngn, Common;
+
+// 网络安全常量
+const
+  MAX_GATE_BUFFER_SIZE = 1024 * 1024;    // 网关缓冲区最大大小 1MB
+  MAX_MSG_LENGTH = 32 * 1024;            // 单个消息最大长度 32KB
+  MAX_RECV_PER_CYCLE = 64 * 1024;        // 每次处理最大接收量 64KB
 type
   TGateUserInfo = record
     sAccount: string;
@@ -205,57 +211,129 @@ var
   MsgHeader: pTMsgHeader; {Size 20}
   nCheckMsgLen: Integer;
   TempBuff: PChar;
+  nNewBufferSize: Integer;
+  nProcessedCount: Integer;
 resourcestring
   sExceptionMsg1 = '[Exception] TRunSocket::ExecGateBuffers -> pBuffer';
-  sExceptionMsg2 =
-    '[Exception] TRunSocket::ExecGateBuffers -> @pwork,ExecGateMsg ';
+  sExceptionMsg2 = '[Exception] TRunSocket::ExecGateBuffers -> @pwork,ExecGateMsg ';
   sExceptionMsg3 = '[Exception] TRunSocket::ExecGateBuffers -> FreeMem';
+  sBufferOverflowMsg = '网关缓冲区溢出保护: 网关 %d, 尝试大小 %d 字节, 限制 %d 字节';
+  sMsgTooLargeMsg = '消息过大: 网关 %d, 消息长度 %d 字节, 限制 %d 字节';
+  sInvalidMsgHeaderMsg = '无效消息头: 网关 %d, 代码 0x%x, 长度 %d';
 begin
-  //nLen := 0;
-  //Buff := nil;
+  // 安全验证1: 检查输入参数有效性
+  if (Buffer = nil) or (nMsgLen <= 0) or (Gate = nil) then begin
+    Exit;
+  end;
+
+  // 安全验证2: 检查消息长度限制
+  if nMsgLen > MAX_RECV_PER_CYCLE then begin
+    MainOutMessage(Format('单次接收数据过大: 网关 %d, 大小 %d 字节, 限制 %d 字节', 
+      [nGateIndex, nMsgLen, MAX_RECV_PER_CYCLE]));
+    Exit;
+  end;
+
+  // 安全验证3: 检查缓冲区大小限制
+  nNewBufferSize := Gate.nBuffLen + nMsgLen;
+  if nNewBufferSize > MAX_GATE_BUFFER_SIZE then begin
+    MainOutMessage(Format(sBufferOverflowMsg, [nGateIndex, nNewBufferSize, MAX_GATE_BUFFER_SIZE]));
+    // 重置缓冲区而不是继续累积
+    if Gate.Buffer <> nil then begin
+      FreeMem(Gate.Buffer);
+      Gate.Buffer := nil;
+    end;
+    Gate.nBuffLen := 0;
+    Exit;
+  end;
+
   try
+    // 安全的缓冲区重新分配
     if Buffer <> nil then begin
-      ReallocMem(Gate.Buffer, Gate.nBuffLen + nMsgLen);
+      ReallocMem(Gate.Buffer, nNewBufferSize);
       Move(Buffer^, Gate.Buffer[Gate.nBuffLen], nMsgLen);
+      Gate.nBuffLen := nNewBufferSize;
     end;
   except
     MainOutMessage(sExceptionMsg1);
+    Exit;
   end;
+
   try
-    nLen := Gate.nBuffLen + nMsgLen;
-    Gate.nBuffLen := nLen;
+    nLen := Gate.nBuffLen;
     Buff := Gate.Buffer;
+    nProcessedCount := 0;
+    
     if nLen >= SizeOf(TMsgHeader) then begin
       while (True) do begin
-        {
-        pMsg:=pTMsgHeader(Buff);
-        if pMsg.dwCode = RUNGATECODE then begin
-          if nLen < (pMsg.nLength + SizeOf(TMsgHeader)) then break;
-          MsgBuff:=@Buff[SizeOf(TMsgHeader)];
-        }
+        // 防止无限循环
+        Inc(nProcessedCount);
+        if nProcessedCount > 1000 then begin
+          MainOutMessage(Format('网关 %d 消息处理循环过多，强制退出', [nGateIndex]));
+          break;
+        end;
+
+        if nLen < SizeOf(TMsgHeader) then break;
+
         MsgHeader := pTMsgHeader(Buff);
-        nCheckMsgLen := abs(MsgHeader.nLength) + SizeOf(TMsgHeader);
-        if (MsgHeader.dwCode = RUNGATECODE) and (nCheckMsgLen < $8000) then begin
-          if nLen < nCheckMsgLen then
-            break;
-          MsgBuff := Buff + SizeOf(TMsgHeader); //Jacky 1009 换上
-          //MsgBuff:=@Buff[SizeOf(TMsgHeader)];
-          ExecGateMsg(nGateIndex, Gate, MsgHeader, MsgBuff, MsgHeader.nLength);
-          Buff := Buff + SizeOf(TMsgHeader) + MsgHeader.nLength;
-            //Jacky 1009 换上
-          //Buff:=@Buff[SizeOf(TMsgHeader) + pMsg.nLength];
-          nLen := nLen - (MsgHeader.nLength + SizeOf(TMsgHeader));
-        end
-        else begin
+        
+        // 安全验证4: 检查消息头有效性
+        if MsgHeader.dwCode <> RUNGATECODE then begin
           Inc(Buff);
           Dec(nLen);
+          Continue;
         end;
-        if nLen < SizeOf(TMsgHeader) then
-          break;
+
+        // 安全验证5: 检查消息长度的合理性
+        if abs(MsgHeader.nLength) > MAX_MSG_LENGTH then begin
+          MainOutMessage(Format(sMsgTooLargeMsg, [nGateIndex, abs(MsgHeader.nLength), MAX_MSG_LENGTH]));
+          Inc(Buff);
+          Dec(nLen);
+          Continue;
+        end;
+
+        nCheckMsgLen := abs(MsgHeader.nLength) + SizeOf(TMsgHeader);
+        
+        // 安全验证6: 检查消息完整性
+        if (nCheckMsgLen > nLen) or (nCheckMsgLen < SizeOf(TMsgHeader)) then begin
+          break; // 消息不完整，等待更多数据
+        end;
+
+        // 安全验证7: 额外的合理性检查
+        if nCheckMsgLen > MAX_MSG_LENGTH then begin
+          MainOutMessage(Format(sInvalidMsgHeaderMsg, [nGateIndex, MsgHeader.dwCode, MsgHeader.nLength]));
+          Inc(Buff);
+          Dec(nLen);
+          Continue;
+        end;
+
+        // 处理有效消息
+        MsgBuff := Buff + SizeOf(TMsgHeader);
+        try
+          ExecGateMsg(nGateIndex, Gate, MsgHeader, MsgBuff, abs(MsgHeader.nLength));
+        except
+          on E: Exception do begin
+            MainOutMessage(Format('处理网关消息异常: 网关 %d, 错误: %s', [nGateIndex, E.Message]));
+          end;
+        end;
+        
+        Buff := Buff + nCheckMsgLen;
+        nLen := nLen - nCheckMsgLen;
       end;
+
       try
+        // 安全的缓冲区整理
         if nLen > 0 then begin
-          if nLen = Gate.nBuffLen then exit;
+          if nLen = Gate.nBuffLen then Exit; // 没有处理任何消息
+          
+          // 验证剩余数据的合理性
+          if nLen > MAX_GATE_BUFFER_SIZE then begin
+            MainOutMessage(Format('剩余缓冲区数据异常: 网关 %d, 大小 %d', [nGateIndex, nLen]));
+            FreeMem(Gate.Buffer);
+            Gate.Buffer := nil;
+            Gate.nBuffLen := 0;
+            Exit;
+          end;
+          
           GetMem(TempBuff, nLen);
           Move(Buff^, TempBuff^, nLen);
           FreeMem(Gate.Buffer);
@@ -269,12 +347,23 @@ begin
         end;
       except
         MainOutMessage(sExceptionMsg3);
+        // 出错时确保资源清理
+        if Gate.Buffer <> nil then begin
+          FreeMem(Gate.Buffer);
+          Gate.Buffer := nil;
+        end;
+        Gate.nBuffLen := 0;
       end;
     end;
   except
     MainOutMessage(sExceptionMsg2);
+    // 异常时清理资源
+    if Gate.Buffer <> nil then begin
+      FreeMem(Gate.Buffer);
+      Gate.Buffer := nil;
+    end;
+    Gate.nBuffLen := 0;
   end;
-
 end;
 
 procedure TRunSocket.SocketRead(Socket: TCustomWinSocket);
