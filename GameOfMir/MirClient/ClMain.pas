@@ -240,6 +240,8 @@ stdcall;
 
     procedure ClientGetHideItem(itemid, pickup: Integer);
 
+    procedure ClientGetItemLightBeam(itemid, x, y, lightBeamType: Integer; sParam: string);
+
     procedure ClientGetSenduseItems(body: string);
 
     procedure ClientGetUserShopList(Msg: pTDefaultMessage; body: string);
@@ -9344,6 +9346,8 @@ begin
     SM_ITEMSHOW: ClientGetShowItem(Msg.Recog, Msg.param {x}, Msg.tag {y},
                                     Msg.series {looks}, DecodeString(body));
     SM_ITEMHIDE: ClientGetHideItem(Msg.Recog, Msg.Series);
+    SM_ITEMLIGHTBEAM: ClientGetItemLightBeam(Msg.Recog, Msg.param {x}, Msg.tag {y}, 
+                                             Msg.series {lightBeamType}, DecodeString(body));
     SM_OPENDOOR_OK: Map.OpenDoor(Msg.param, Msg.tag);
     SM_OPENDOOR_LOCK: DScreen.AddSysMsg('[门被锁住了]', clWhite);
     SM_CLOSEDOOR: Map.CloseDoor(Msg.param, Msg.tag);
@@ -14649,6 +14653,41 @@ begin
 end
 
 ;
+
+procedure TfrmMain.ClientGetItemLightBeam(itemid, x, y, lightBeamType: Integer; sParam: string);
+var
+  LightBeamEffect: TItemLightBeamEffect;
+  nFrameCount, nFrameTime: Integer;
+  sParams: TStringList;
+begin
+  try
+    // 解析参数字符串 "帧数,帧间隔"
+    sParams := TStringList.Create;
+    try
+      sParams.CommaText := sParam;
+      if sParams.Count >= 2 then begin
+        nFrameCount := StrToIntDef(sParams[0], 10);
+        nFrameTime := StrToIntDef(sParams[1], 100);
+      end else begin
+        nFrameCount := 10;
+        nFrameTime := 100;
+      end;
+    finally
+      sParams.Free;
+    end;
+    
+    // 创建光柱特效
+    LightBeamEffect := TItemLightBeamEffect.Create(x, y, lightBeamType, nFrameCount, nFrameTime);
+    if LightBeamEffect <> nil then begin
+      PlayScene.m_EffectList.Add(LightBeamEffect);
+    end;
+  except
+    on E: Exception do begin
+      MainOutMessage('[Exception] ClientGetItemLightBeam: ' + E.Message);
+    end;
+  end;
+end;
+
 
 initialization
     //OleInitialize(nil);

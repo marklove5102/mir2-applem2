@@ -6466,6 +6466,13 @@ begin
     pr := m_PEnvir.AddToMap(dx, dy, OS_ITEMOBJECT, TObject(MapItem));
     if pr = MapItem then begin
       SendRefMsg(RM_ITEMSHOW, MapItem.Looks, Integer(MapItem), dx, dy, MapItem.Name);
+      
+      // 检查是否需要显示光柱效果
+      if (StdItem.LightBeamEnabled = 1) and (StdItem.LightBeamType > 0) then begin
+        SendRefMsg(RM_ITEMLIGHTBEAM, StdItem.LightBeamType, Integer(MapItem), dx, dy, 
+          IntToStr(StdItem.LightBeamFrameCount) + ',' + IntToStr(StdItem.LightBeamFrameTime));
+      end;
+      
       if boDieDrop then
         logcap := '掉落'
       else

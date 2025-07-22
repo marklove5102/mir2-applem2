@@ -1170,6 +1170,10 @@ begin
       StdItem.HealthRecover := Query.FieldByName('HealthRecover').AsInteger;
       StdItem.SpellRecover := Query.FieldByName('SpellRecover').AsInteger;
       StdItem.PoisonRecover := Query.FieldByName('PoisonRecover').AsInteger;
+      StdItem.LightBeamEnabled := Query.FieldByName('LightBeamEnabled').AsInteger;
+      StdItem.LightBeamType := Query.FieldByName('LightBeamType').AsInteger;
+      StdItem.LightBeamFrameCount := Query.FieldByName('LightBeamFrameCount').AsInteger;
+      StdItem.LightBeamFrameTime := Query.FieldByName('LightBeamFrameTime').AsInteger;
       StdItem.Bind := Query.FieldByName('Bind').AsInteger;
       StdItem.AddWuXinAttack := 0;
       StdItem.DelWuXinAttack := 0;

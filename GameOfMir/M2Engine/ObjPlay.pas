@@ -1440,6 +1440,7 @@ begin
   FServerProcess[RM_HEALTHSPELLCHANGED] := ServerHealthSpellChange;
   FServerProcess[RM_ITEMSHOW] := ServerItemShow;
   FServerProcess[RM_ITEMHIDE] := ServerItemHide;
+  FServerProcess[RM_ITEMLIGHTBEAM] := ServerItemLightBeam;
   FServerProcess[RM_DOOROPEN] := ServerDoorOpen;
   FServerProcess[RM_DOORCLOSE] := ServerDoorClose;
   FServerProcess[RM_FEATURECHANGED] := ServerFeatureChanged;
@@ -18842,5 +18843,13 @@ begin
     SendDefMessage(SM_TAKEOFF_FAIL, n10, 0, 0, 0, '');
 end;
 
-end.
+end;
 
+procedure TPlayObject.ServerItemLightBeam(ProcessMsg: pTProcessMessage; var boResult: Boolean);
+begin
+  // 光柱消息处理 - 这个函数主要用于处理客户端发送的光柱相关消息
+  // 目前服务端不需要特殊处理，因为光柱效果是在物品掉落时自动发送的
+  boResult := True;
+end;
+
+end.

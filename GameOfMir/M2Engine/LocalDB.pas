@@ -303,6 +303,10 @@ begin
         StdItem.HealthRecover := Query.FieldByName('HealthRecover').AsInteger;
         StdItem.SpellRecover := Query.FieldByName('SpellRecover').AsInteger;
         StdItem.PoisonRecover := Query.FieldByName('PoisonRecover').AsInteger;
+        StdItem.LightBeamEnabled := Query.FieldByName('LightBeamEnabled').AsInteger;
+        StdItem.LightBeamType := Query.FieldByName('LightBeamType').AsInteger;
+        StdItem.LightBeamFrameCount := Query.FieldByName('LightBeamFrameCount').AsInteger;
+        StdItem.LightBeamFrameTime := Query.FieldByName('LightBeamFrameTime').AsInteger;
         StdItem.Color := Query.FieldByName('Color').AsInteger;
         wBind := Query.FieldByName('Bind').AsInteger;
         StdItem.Bind := 0;

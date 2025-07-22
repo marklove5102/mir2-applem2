@@ -361,6 +361,19 @@ type
     function Run: Boolean; override;
     procedure DrawEff(surface: TDirectDrawSurface); override;
   end;
+
+  TItemLightBeamEffect = class(TMagicEff) // 物品光柱特效
+    m_nLightBeamType: Integer; // 光柱类型
+    m_nFrameCount: Integer; // 动画帧数
+    m_nFrameTime: Integer; // 帧间隔时间
+    m_dwLastFrameTime: LongWord; // 上次帧切换时间
+    m_nCurrentFrame: Integer; // 当前帧
+    m_boLoop: Boolean; // 是否循环播放
+  public
+    constructor Create(nX, nY: Integer; nLightBeamType, nFrameCount, nFrameTime: Integer);
+    function Run: Boolean; override;
+    procedure DrawEff(surface: TDirectDrawSurface); override;
+  end;
 procedure GetEffectBase(mag, mtype: integer; var wimg: TWMImages; var idx: integer);
 
 implementation
@@ -1910,6 +1923,97 @@ begin
         DrawBlend(surface, FlyX + px - UNITX div 2, FlyY + py - UNITY div 2, d, 1)
       end;
     end;
+  end;
+end;
+
+end;
+
+{ TItemLightBeamEffect }
+
+constructor TItemLightBeamEffect.Create(nX, nY: Integer; nLightBeamType, nFrameCount, nFrameTime: Integer);
+begin
+  inherited Create(0, 0, nX, nY, nX, nY, 0, mtReady, False, 0);
+  m_nLightBeamType := nLightBeamType;
+  m_nFrameCount := nFrameCount;
+  m_nFrameTime := nFrameTime;
+  m_dwLastFrameTime := GetTickCount;
+  m_nCurrentFrame := 0;
+  m_boLoop := True; // 光柱效果循环播放
+  m_boActive := True;
+  NextFrameTime := nFrameTime;
+  frame := nFrameCount;
+  start := 0;
+  curframe := 0;
+end;
+
+function TItemLightBeamEffect.Run: Boolean;
+begin
+  Result := True;
+  if not m_boActive then begin
+    Result := False;
+    Exit;
+  end;
+  
+  // 检查是否需要切换帧
+  if GetTickCount - m_dwLastFrameTime >= m_nFrameTime then begin
+    m_dwLastFrameTime := GetTickCount;
+    Inc(m_nCurrentFrame);
+    
+    // 如果播放完所有帧，重新开始循环
+    if m_nCurrentFrame >= m_nFrameCount then begin
+      if m_boLoop then begin
+        m_nCurrentFrame := 0;
+      end else begin
+        m_boActive := False;
+        Result := False;
+        Exit;
+      end;
+    end;
+    
+    curframe := m_nCurrentFrame;
+  end;
+end;
+
+procedure TItemLightBeamEffect.DrawEff(surface: TDirectDrawSurface);
+var
+  d: TDirectDrawSurface;
+  px, py: Integer;
+  shx, shy: Integer;
+begin
+  if not m_boActive then Exit;
+  
+  // 计算屏幕偏移
+  shx := (g_Myself.m_nRx * UNITX + g_Myself.m_nShiftX) - FireMyselfX;
+  shy := (g_Myself.m_nRy * UNITY + g_Myself.m_nShiftY) - FireMyselfY;
+  
+  // 根据光柱类型选择图片库
+  case m_nLightBeamType of
+    1: begin // 金色光柱
+        d := g_WMagic2Images.GetCachedImage(1000 + m_nCurrentFrame, px, py);
+      end;
+    2: begin // 蓝色光柱
+        d := g_WMagic2Images.GetCachedImage(1100 + m_nCurrentFrame, px, py);
+      end;
+    3: begin // 红色光柱
+        d := g_WMagic2Images.GetCachedImage(1200 + m_nCurrentFrame, px, py);
+      end;
+    4: begin // 绿色光柱
+        d := g_WMagic2Images.GetCachedImage(1300 + m_nCurrentFrame, px, py);
+      end;
+    5: begin // 紫色光柱
+        d := g_WMagic2Images.GetCachedImage(1400 + m_nCurrentFrame, px, py);
+      end;
+    else begin // 默认白色光柱
+        d := g_WMagic2Images.GetCachedImage(900 + m_nCurrentFrame, px, py);
+      end;
+  end;
+  
+  if d <> nil then begin
+    // 绘制光柱效果，位置在物品下方
+    DrawBlend(surface,
+      TargetX + px - UNITX div 2 - shx,
+      TargetY + py - UNITY div 2 - shy + 20, // 向下偏移20像素
+      d, 1);
   end;
 end;
 

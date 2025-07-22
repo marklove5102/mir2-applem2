@@ -579,6 +579,7 @@ $80000000  }
   SM_DROPITEM_FAIL = 5085;
   SM_ITEMSHOW = 5086;
   SM_ITEMHIDE = 5087;
+  SM_ITEMLIGHTBEAM = 5097; // 物品光柱效果
   SM_OPENDOOR_OK = 5088;//通过过门点成功
   SM_OPENDOOR_LOCK = 5089;//发现过门口是封锁的,以前盛大秘密通道去赤月的门要5分钟开一次
   SM_CLOSEDOOR = 5090;//用户过门,门自行关闭
@@ -1010,6 +1011,7 @@ $80000000  }
   RM_GUILDMESSAGE = 28 + RG_MAXMSGINDEX;
   RM_ITEMSHOW = 29 + RG_MAXMSGINDEX;
   RM_ITEMHIDE = 30 + RG_MAXMSGINDEX;
+  RM_ITEMLIGHTBEAM = 90 + RG_MAXMSGINDEX; // 物品光柱效果
   RM_DOOROPEN = 31 + RG_MAXMSGINDEX;
   RM_DOORCLOSE = 32 + RG_MAXMSGINDEX;
   RM_FEATURECHANGED = 33 + RG_MAXMSGINDEX;
@@ -1686,6 +1688,10 @@ type
     HPorMPRate: Byte;
     AC2Rate: Byte;
     MAC2Rate: Byte;
+    LightBeamEnabled: Byte;// 光柱效果开关 0=关闭 1=开启
+    LightBeamType: Byte;// 光柱类型编号 0-255
+    LightBeamFrameCount: Byte;// 光柱动画帧数
+    LightBeamFrameTime: Word;// 光柱动画帧间隔(毫秒)
     Rule: pTItemRule;
     Color: Byte;// 名称颜色
     SetItemList: TList;
