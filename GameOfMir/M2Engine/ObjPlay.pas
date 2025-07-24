@@ -6716,12 +6716,31 @@ begin
           nBack := 8; //到了这里就得所有材料装备了
           for i := Low(vUserItem) + 1 to High(vUserItem) do begin
             if vUserItem[i] <> nil then begin
-              if vStdItem[i].NeedIdentify = 1 then
-                AddGameLog(Self, LOG_DELITEM, vStdItem[i].Name, vUserItem[i].MakeIndex,
-                  0, '0', '0', '0', '装备合成', vUserItem[i]);
-              Dispose(vUserItem[i]);
-              vUserItem[i] := nil;
-              vStdItem[i] := nil;
+              // 修复装备合成收走叠加材料的问题 - 只扣除需要的数量
+              if (sm_Superposition in vStdItem[i].StdModeEx) and (vStdItem[i].DuraMax > 1) then begin
+                // 叠加物品，只扣除需要的数量
+                Dec(vUserItem[i].Dura, 1);
+                if vUserItem[i].Dura <= 0 then begin
+                  // 完全消耗
+                  if vStdItem[i].NeedIdentify = 1 then
+                    AddGameLog(Self, LOG_DELITEM, vStdItem[i].Name, vUserItem[i].MakeIndex,
+                      0, '0', '0', '0', '装备合成', vUserItem[i]);
+                  Dispose(vUserItem[i]);
+                  vUserItem[i] := nil;
+                  vStdItem[i] := nil;
+                end else begin
+                  // 保留剩余数量
+                  SendUpdateItem(vUserItem[i]);
+                end;
+              end else begin
+                // 非叠加物品，完全消耗
+                if vStdItem[i].NeedIdentify = 1 then
+                  AddGameLog(Self, LOG_DELITEM, vStdItem[i].Name, vUserItem[i].MakeIndex,
+                    0, '0', '0', '0', '装备合成', vUserItem[i]);
+                Dispose(vUserItem[i]);
+                vUserItem[i] := nil;
+                vStdItem[i] := nil;
+              end;
             end;
           end; //end for
           nBack := 9; //升级失败
@@ -18126,6 +18145,11 @@ begin
   DelList := nil;
   if m_boAngryRing or m_boNoDropItem then
     Exit; //不死戒指
+    
+  // 修复人形怪必爆背包物品的Bug - 人形怪不掉落背包物品
+  if (ItemOfCreat <> nil) and (ItemOfCreat.m_btRaceServer = RC_USERHUMAN) then begin
+    Exit;
+  end;
 
   boDropall := False;
   DropWide := 4;

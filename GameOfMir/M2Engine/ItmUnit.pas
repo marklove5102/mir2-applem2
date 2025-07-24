@@ -517,6 +517,7 @@ begin
     StdItem.nMC2 := StdItem.nMC2 + UserItem.Value.btValue[tb_MC2];
     StdItem.nSC := StdItem.nSC + UserItem.Value.btValue[tb_SC];
     StdItem.nSC2 := StdItem.nSC2 + UserItem.Value.btValue[tb_SC2];
+    // 修复强化属性+HP、MP实际属性翻了10倍的问题
     StdItem.HP := StdItem.HP + UserItem.Value.btValue[tb_HP];
     StdItem.MP := StdItem.MP + UserItem.Value.btValue[tb_MP];
 

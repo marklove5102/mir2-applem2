@@ -1449,6 +1449,11 @@ begin
   if (StdItem = nil) or (Stditem.StdMode = tm_House) then Exit;
   StdItemA := StdItem^;
   if not ItemUnit.GetItemAddValue(m_btWuXin, Item, StdItemA) then exit;
+  
+  // 修复装备穿戴后都有发光效果的Bug - 只有特定装备才有发光效果
+  if StdItemA.Effect > 0 then begin
+    AddAbility.Effect := StdItemA.Effect;
+  end;
 
   AddAbility.AC := _MIN(High(Integer), AddAbility.AC + StdItemA.nAC);
   AddAbility.AC2 := _MIN(High(Integer), AddAbility.AC2 + StdItemA.nAC2);
@@ -6261,16 +6266,16 @@ var
 begin
   if ((m_LastHiter = nil) or (not m_LastHiter.m_boUnMagicShield)) and m_boMagicShield and (nDamage > 0) and (m_WAbil.MP > 0)
   then begin
-    nSpdam := ROUND(nDamage * 1.5);
+    // 修复魔法盾减伤害过多的问题 - 使用配置的减伤比例而不是固定的1.5倍
+    nSpdam := ROUND(nDamage * g_Config.fMagicShieldDamageRate);
     if Integer(m_WAbil.MP) >= nSpdam then begin
       m_WAbil.MP := m_WAbil.MP - nSpdam;
-      nSpdam := 0;
+      nDamage := nDamage - nSpdam;
     end
     else begin
-      nSpdam := nSpdam - m_WAbil.MP;
+      nDamage := nDamage - m_WAbil.MP;
       m_WAbil.MP := 0;
     end;
-    nDamage := ROUND(nSpdam / 1.5);
     HealthSpellChanged();
   end;
   if (nDamage > 0) and (m_WAbil.MP > 0) and m_boAbilMagShieldDefence then begin
