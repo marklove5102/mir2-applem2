@@ -3702,6 +3702,56 @@ var
       else
         sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', '????');
     end
+    // 2011年新增功能 - 队伍成员常量处理
+    else if sLabel2 = sVAR_TEAM0 then begin
+      sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_TEAM0);
+    end
+    else if sLabel2 = sVAR_TEAM1 then begin
+      sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_TEAM1);
+    end
+    else if sLabel2 = sVAR_TEAM2 then begin
+      sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_TEAM2);
+    end
+    else if sLabel2 = sVAR_TEAM3 then begin
+      sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_TEAM3);
+    end
+    else if sLabel2 = sVAR_TEAM4 then begin
+      sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_TEAM4);
+    end
+    else if sLabel2 = sVAR_TEAM5 then begin
+      sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_TEAM5);
+    end
+    else if sLabel2 = sVAR_TEAM6 then begin
+      sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_TEAM6);
+    end
+    else if sLabel2 = sVAR_TEAM7 then begin
+      sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_TEAM7);
+    end
+    // 2012年新增功能 - 基础变量系统扩展
+    else if sLabel2 = sVAR_POWERRATE then begin
+      sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_POWERRATE);
+    end
+    else if sLabel2 = sVAR_POWERRATETIME then begin
+      sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_POWERRATETIME);
+    end
+    else if sLabel2 = sVAR_EXPRATE then begin
+      sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_EXPRATE);
+    end
+    else if sLabel2 = sVAR_EXPRATETIME then begin
+      sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_EXPRATETIME);
+    end
+    else if sLabel2 = sVAR_GUILDLEVEL then begin
+      sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_GUILDLEVEL);
+    end
+    else if sLabel2 = sVAR_RENEWLEVEL then begin
+      sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_RENEWLEVEL);
+    end
+    else if sLabel2 = sVAR_GROUPCOUNT then begin
+      sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_GROUPCOUNT);
+    end
+    else if sLabel2 = sVAR_USERINTERFACE then begin
+      sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_USERINTERFACE);
+    end
     else if CompareLStr(sLabel2, sVAR_HUMAN, Length(sVAR_HUMAN)) then begin
       ArrestStringEx(sLabel, '(', ')', s14);
       if s14 <> '' then begin
@@ -5961,6 +6011,467 @@ var
       nCMDCode := nSC_SETHUMICON;
       goto L001;
     end;
+    
+    // 2011年新增功能解析
+    if sCmd = sSC_SETONTIMER then begin
+      nCMDCode := nSC_SETONTIMER;
+      goto L001;
+    end;
+    if sCmd = sSC_SETOFFTIMER then begin
+      nCMDCode := nSC_SETOFFTIMER;
+      goto L001;
+    end;
+    if sCmd = sSC_GOHOME then begin
+      nCMDCode := nSC_GOHOME;
+      goto L001;
+    end;
+    if sCmd = sSC_THROWITEM then begin
+      nCMDCode := nSC_THROWITEM;
+      goto L001;
+    end;
+    if sCmd = sSC_CHECKTEAMCOUNT then begin
+      nCMDCode := nSC_CHECKTEAMCOUNT;
+      goto L001;
+    end;
+    if sCmd = sSC_CHECKTIMEOFSYSTEM then begin
+      nCMDCode := nSC_CHECKTIMEOFSYSTEM;
+      goto L001;
+    end;
+    if sCmd = sSC_ADDEXPRATEMULTIPLE then begin
+      nCMDCode := nSC_ADDEXPRATEMULTIPLE;
+      goto L001;
+    end;
+    if sCmd = sSC_KILLMONEXPMULTIPLE then begin
+      nCMDCode := nSC_KILLMONEXPMULTIPLE;
+      goto L001;
+    end;
+    
+    // 2012年新增功能解析
+    if sCmd = sSC_CHECKITEMSTRENGTHEN then begin
+      nCMDCode := nSC_CHECKITEMSTRENGTHEN;
+      goto L001;
+    end;
+    if sCmd = sSC_STRENGTHENITEM then begin
+      nCMDCode := nSC_STRENGTHENITEM;
+      goto L001;
+    end;
+    if sCmd = sSC_CHECKITEMCOMPOUND then begin
+      nCMDCode := nSC_CHECKITEMCOMPOUND;
+      goto L001;
+    end;
+    if sCmd = sSC_COMPOUNDITEM then begin
+      nCMDCode := nSC_COMPOUNDITEM;
+      goto L001;
+    end;
+    if sCmd = sSC_CHECKSUITCOUNT then begin
+      nCMDCode := nSC_CHECKSUITCOUNT;
+      goto L001;
+    end;
+    if sCmd = sSC_ACTIVATESUIT then begin
+      nCMDCode := nSC_ACTIVATESUIT;
+      goto L001;
+    end;
+    if sCmd = sSC_CHECKITEMENLIGHTEN then begin
+      nCMDCode := nSC_CHECKITEMENLIGHTEN;
+      goto L001;
+    end;
+    if sCmd = sSC_ENLIGHTENITEM then begin
+      nCMDCode := nSC_ENLIGHTENITEM;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 基础脚本命令扩展
+    if sCmd = sSC_REFRESHVALUE then begin
+      nCMDCode := nSC_REFRESHVALUE;
+      goto L001;
+    end;
+    if sCmd = sSC_HOOKITEMIDX then begin
+      nCMDCode := nSC_HOOKITEMIDX;
+      goto L001;
+    end;
+    if sCmd = sSC_KILLMONEXPMULTIPLE then begin
+      nCMDCode := nSC_KILLMONEXPMULTIPLE;
+      goto L001;
+    end;
+    if sCmd = sSC_OPENUPGRADEDIALOG then begin
+      nCMDCode := nSC_OPENUPGRADEDIALOG;
+      goto L001;
+    end;
+    if sCmd = sSC_CREATEFILE then begin
+      nCMDCode := nSC_CREATEFILE;
+      goto L001;
+    end;
+    if sCmd = sSC_TAKEIDX then begin
+      nCMDCode := nSC_TAKEIDX;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 装备品质和特效系统
+    if sCmd = sSC_SETITEMQUALITY then begin
+      nCMDCode := nSC_SETITEMQUALITY;
+      goto L001;
+    end;
+    if sCmd = sSC_GETITEMQUALITY then begin
+      nCMDCode := nSC_GETITEMQUALITY;
+      goto L001;
+    end;
+    if sCmd = sSC_SETITEMEFFECT then begin
+      nCMDCode := nSC_SETITEMEFFECT;
+      goto L001;
+    end;
+    if sCmd = sSC_GETITEMEFFECT then begin
+      nCMDCode := nSC_GETITEMEFFECT;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 邮件系统
+    if sCmd = sSC_SENDMAIL then begin
+      nCMDCode := nSC_SENDMAIL;
+      goto L001;
+    end;
+    if sCmd = sSC_READMAIL then begin
+      nCMDCode := nSC_READMAIL;
+      goto L001;
+    end;
+    if sCmd = sSC_DELETEMAIL then begin
+      nCMDCode := nSC_DELETEMAIL;
+      goto L001;
+    end;
+    if sCmd = sSC_GETMAILLIST then begin
+      nCMDCode := nSC_GETMAILLIST;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 离线挂机系统
+    if sCmd = sSC_STARTOFFLINE then begin
+      nCMDCode := nSC_STARTOFFLINE;
+      goto L001;
+    end;
+    if sCmd = sSC_STOPOFFLINE then begin
+      nCMDCode := nSC_STOPOFFLINE;
+      goto L001;
+    end;
+    if sCmd = sSC_CHECKOFFLINE then begin
+      nCMDCode := nSC_CHECKOFFLINE;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 检测命令扩展
+    if sCmd = sSC_CHECKITEMQUALITY then begin
+      nCMDCode := nSC_CHECKITEMQUALITY;
+      goto L001;
+    end;
+    if sCmd = sSC_CHECKITEMEFFECT then begin
+      nCMDCode := nSC_CHECKITEMEFFECT;
+      goto L001;
+    end;
+    if sCmd = sSC_CHECKOFFLINETIME then begin
+      nCMDCode := nSC_CHECKOFFLINETIME;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 新怪物攻击模式
+    if sCmd = sSC_SETMONSTERATTACKMODE then begin
+      nCMDCode := nSC_SETMONSTERATTACKMODE;
+      goto L001;
+    end;
+    if sCmd = sSC_GETMONSTERATTACKMODE then begin
+      nCMDCode := nSC_GETMONSTERATTACKMODE;
+      goto L001;
+    end;
+    if sCmd = sSC_SETMONSTERATTACKRANGE then begin
+      nCMDCode := nSC_SETMONSTERATTACKRANGE;
+      goto L001;
+    end;
+    if sCmd = sSC_GETMONSTERATTACKRANGE then begin
+      nCMDCode := nSC_GETMONSTERATTACKRANGE;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 坐骑系统升级
+    if sCmd = sSC_UPGRADEHORSE then begin
+      nCMDCode := nSC_UPGRADEHORSE;
+      goto L001;
+    end;
+    if sCmd = sSC_GETHORSELEVEL then begin
+      nCMDCode := nSC_GETHORSELEVEL;
+      goto L001;
+    end;
+    if sCmd = sSC_SETHORSESKILL then begin
+      nCMDCode := nSC_SETHORSESKILL;
+      goto L001;
+    end;
+    if sCmd = sSC_GETHORSESKILL then begin
+      nCMDCode := nSC_GETHORSESKILL;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 商城系统扩展
+    if sCmd = sSC_OPENSKINDIALOG then begin
+      nCMDCode := nSC_OPENSKINDIALOG;
+      goto L001;
+    end;
+    if sCmd = sSC_OPENTOPUPDIALOG then begin
+      nCMDCode := nSC_OPENTOPUPDIALOG;
+      goto L001;
+    end;
+    if sCmd = sSC_OPENVIPDIALOG then begin
+      nCMDCode := nSC_OPENVIPDIALOG;
+      goto L001;
+    end;
+    if sCmd = sSC_OPENRECHARGEDIALOG then begin
+      nCMDCode := nSC_OPENRECHARGEDIALOG;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 技能系统扩展
+    if sCmd = sSC_ADDSKILLEXP then begin
+      nCMDCode := nSC_ADDSKILLEXP;
+      goto L001;
+    end;
+    if sCmd = sSC_SETSKILLEXP then begin
+      nCMDCode := nSC_SETSKILLEXP;
+      goto L001;
+    end;
+    if sCmd = sSC_GETSKILLEXP then begin
+      nCMDCode := nSC_GETSKILLEXP;
+      goto L001;
+    end;
+    if sCmd = sSC_RESETSKILL then begin
+      nCMDCode := nSC_RESETSKILL;
+      goto L001;
+    end;
+    if sCmd = sSC_LEARNALLSKILLS then begin
+      nCMDCode := nSC_LEARNALLSKILLS;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 高级脚本命令扩展
+    if sCmd = sSC_SETPLAYERFLAG then begin
+      nCMDCode := nSC_SETPLAYERFLAG;
+      goto L001;
+    end;
+    if sCmd = sSC_GETPLAYERFLAG then begin
+      nCMDCode := nSC_GETPLAYERFLAG;
+      goto L001;
+    end;
+    if sCmd = sSC_SETPLAYERDATA then begin
+      nCMDCode := nSC_SETPLAYERDATA;
+      goto L001;
+    end;
+    if sCmd = sSC_GETPLAYERDATA then begin
+      nCMDCode := nSC_GETPLAYERDATA;
+      goto L001;
+    end;
+    if sCmd = sSC_EXECUTEFUNCTION then begin
+      nCMDCode := nSC_EXECUTEFUNCTION;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 性能优化缓存系统
+    if sCmd = sSC_SETCACHE then begin
+      nCMDCode := nSC_SETCACHE;
+      goto L001;
+    end;
+    if sCmd = sSC_GETCACHE then begin
+      nCMDCode := nSC_GETCACHE;
+      goto L001;
+    end;
+    if sCmd = sSC_CLEARCACHE then begin
+      nCMDCode := nSC_CLEARCACHE;
+      goto L001;
+    end;
+    if sCmd = sSC_CACHEEXISTS then begin
+      nCMDCode := nSC_CACHEEXISTS;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 安全性增强日志系统
+    if sCmd = sSC_WRITELOG then begin
+      nCMDCode := nSC_WRITELOG;
+      goto L001;
+    end;
+    if sCmd = sSC_READLOG then begin
+      nCMDCode := nSC_READLOG;
+      goto L001;
+    end;
+    if sCmd = sSC_CLEARLOG then begin
+      nCMDCode := nSC_CLEARLOG;
+      goto L001;
+    end;
+    if sCmd = sSC_LOGEXISTS then begin
+      nCMDCode := nSC_LOGEXISTS;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 完整邮件系统数据库集成
+    if sCmd = sSC_SENDMAILDB then begin
+      nCMDCode := nSC_SENDMAILDB;
+      goto L001;
+    end;
+    if sCmd = sSC_READMAILDB then begin
+      nCMDCode := nSC_READMAILDB;
+      goto L001;
+    end;
+    if sCmd = sSC_DELETEMAILDB then begin
+      nCMDCode := nSC_DELETEMAILDB;
+      goto L001;
+    end;
+    if sCmd = sSC_GETMAILLISTDB then begin
+      nCMDCode := nSC_GETMAILLISTDB;
+      goto L001;
+    end;
+    if sCmd = sSC_MAILCOUNT then begin
+      nCMDCode := nSC_MAILCOUNT;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 离线挂机收益计算
+    if sCmd = sSC_CALCOFFLINEREWARD then begin
+      nCMDCode := nSC_CALCOFFLINEREWARD;
+      goto L001;
+    end;
+    if sCmd = sSC_CLAIMOFFLINEREWARD then begin
+      nCMDCode := nSC_CLAIMOFFLINEREWARD;
+      goto L001;
+    end;
+    if sCmd = sSC_GETOFFLINEREWARD then begin
+      nCMDCode := nSC_GETOFFLINEREWARD;
+      goto L001;
+    end;
+    if sCmd = sSC_SETOFFLINERATE then begin
+      nCMDCode := nSC_SETOFFLINERATE;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 客户端界面优化界面管理系统
+    if sCmd = sSC_SHOWUI then begin
+      nCMDCode := nSC_SHOWUI;
+      goto L001;
+    end;
+    if sCmd = sSC_HIDEUI then begin
+      nCMDCode := nSC_HIDEUI;
+      goto L001;
+    end;
+    if sCmd = sSC_SETUIPOS then begin
+      nCMDCode := nSC_SETUIPOS;
+      goto L001;
+    end;
+    if sCmd = sSC_SETUISIZE then begin
+      nCMDCode := nSC_SETUISIZE;
+      goto L001;
+    end;
+    if sCmd = sSC_REFRESHUI then begin
+      nCMDCode := nSC_REFRESHUI;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 网络通信优化网络管理系统
+    if sCmd = sSC_SETNETWORKMODE then begin
+      nCMDCode := nSC_SETNETWORKMODE;
+      goto L001;
+    end;
+    if sCmd = sSC_GETNETWORKSTATUS then begin
+      nCMDCode := nSC_GETNETWORKSTATUS;
+      goto L001;
+    end;
+    if sCmd = sSC_OPTIMIZENETWORK then begin
+      nCMDCode := nSC_OPTIMIZENETWORK;
+      goto L001;
+    end;
+    if sCmd = sSC_SETNETWORKTIMEOUT then begin
+      nCMDCode := nSC_SETNETWORKTIMEOUT;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 装备品质特效的客户端显示装备特效系统
+    if sCmd = sSC_SHOWEQUIPEFFECT then begin
+      nCMDCode := nSC_SHOWEQUIPEFFECT;
+      goto L001;
+    end;
+    if sCmd = sSC_HIDEEQUIPEFFECT then begin
+      nCMDCode := nSC_HIDEEQUIPEFFECT;
+      goto L001;
+    end;
+    if sCmd = sSC_SETEQUIPEFFECT then begin
+      nCMDCode := nSC_SETEQUIPEFFECT;
+      goto L001;
+    end;
+    if sCmd = sSC_GETEQUIPEFFECT then begin
+      nCMDCode := nSC_GETEQUIPEFFECT;
+      goto L001;
+    end;
+    if sCmd = sSC_PLAYEQUIPEFFECT then begin
+      nCMDCode := nSC_PLAYEQUIPEFFECT;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 高级脚本命令扩展高级脚本系统
+    if sCmd = sSC_EXECUTESCRIPT then begin
+      nCMDCode := nSC_EXECUTESCRIPT;
+      goto L001;
+    end;
+    if sCmd = sSC_LOADSCRIPT then begin
+      nCMDCode := nSC_LOADSCRIPT;
+      goto L001;
+    end;
+    if sCmd = sSC_UNLOADSCRIPT then begin
+      nCMDCode := nSC_UNLOADSCRIPT;
+      goto L001;
+    end;
+    if sCmd = sSC_GETSCRIPTVAR then begin
+      nCMDCode := nSC_GETSCRIPTVAR;
+      goto L001;
+    end;
+    if sCmd = sSC_SETSCRIPTVAR then begin
+      nCMDCode := nSC_SETSCRIPTVAR;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - 插件系统开发插件管理系统
+    if sCmd = sSC_LOADPLUGIN then begin
+      nCMDCode := nSC_LOADPLUGIN;
+      goto L001;
+    end;
+    if sCmd = sSC_UNLOADPLUGIN then begin
+      nCMDCode := nSC_UNLOADPLUGIN;
+      goto L001;
+    end;
+    if sCmd = sSC_GETPLUGINSTATUS then begin
+      nCMDCode := nSC_GETPLUGINSTATUS;
+      goto L001;
+    end;
+    if sCmd = sSC_EXECUTEPLUGIN then begin
+      nCMDCode := nSC_EXECUTEPLUGIN;
+      goto L001;
+    end;
+    if sCmd = sSC_GETPLUGINLIST then begin
+      nCMDCode := nSC_GETPLUGINLIST;
+      goto L001;
+    end;
+    
+    // 2012年新增功能 - AI系统集成AI管理系统
+    if sCmd = sSC_SETAI then begin
+      nCMDCode := nSC_SETAI;
+      goto L001;
+    end;
+    if sCmd = sSC_GETAI then begin
+      nCMDCode := nSC_GETAI;
+      goto L001;
+    end;
+    if sCmd = sSC_AIACTION then begin
+      nCMDCode := nSC_AIACTION;
+      goto L001;
+    end;
+    if sCmd = sSC_AISTATE then begin
+      nCMDCode := nSC_AISTATE;
+      goto L001;
+    end;
+    if sCmd = sSC_AITRAIN then begin
+      nCMDCode := nSC_AITRAIN;
+      goto L001;
+    end;
+    
 {$IFDEF PLUGOPEN}
     if Assigned(zPlugOfEngine.ScriptActionCmd) then begin
       nCMDCode := zPlugOfEngine.ScriptActionCmd(PChar(sCmd));

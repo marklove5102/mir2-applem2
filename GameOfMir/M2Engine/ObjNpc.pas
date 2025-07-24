@@ -418,6 +418,105 @@ type
     procedure ActionOfSendEMail(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
     procedure ActionOfSetHumIcon(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
     procedure ActionOfTakeOffItem(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    
+    // 2011年新增功能的Action函数
+    procedure ActionOfSetOnTimer(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfSetOffTimer(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfGoHome(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfThrowItem(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfCheckTeamCount(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfCheckTimeOfSystem(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfAddExpRateMultiple(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfKillMonExpMultiple(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    
+    // 2012年新增功能的Action函数
+    procedure ActionOfCheckItemStrengthen(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfStrengthenItem(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfCheckItemCompound(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfCompoundItem(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfCheckSuitCount(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfActivateSuit(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfCheckItemEnlighten(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfEnlightenItem(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfRefreshValue(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfHookItemIdx(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfKillMonExpMultiple(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfOpenUpgradeDialog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfCreateFile(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfTakeIdx(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfSetItemQuality(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetItemQuality(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfSetItemEffect(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetItemEffect(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfSendMail(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfReadMail(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfDeleteMail(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetMailList(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfStartOffline(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfStopOffline(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfCheckOffline(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ConditionOfCheckItemQuality(PlayObject: TPlayObject; QuestConditionInfo: pTQuestConditionInfo; var Result: Boolean);
+procedure ConditionOfCheckItemEffect(PlayObject: TPlayObject; QuestConditionInfo: pTQuestConditionInfo; var Result: Boolean);
+procedure ConditionOfCheckOfflineTime(PlayObject: TPlayObject; QuestConditionInfo: pTQuestConditionInfo; var Result: Boolean);
+procedure ActionOfSetMonsterAttackMode(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetMonsterAttackMode(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfSetMonsterAttackRange(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetMonsterAttackRange(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfUpgradeHorse(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetHorseLevel(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfSetHorseSkill(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetHorseSkill(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfOpenSkinDialog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfOpenTopupDialog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfOpenVipDialog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfOpenRechargeDialog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfAddSkillExp(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfSetSkillExp(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetSkillExp(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfResetSkill(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfLearnAllSkills(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfSetPlayerFlag(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetPlayerFlag(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfSetPlayerData(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetPlayerData(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfExecuteFunction(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfSetCache(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetCache(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfClearCache(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfCacheExists(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfWriteLog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfReadLog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfClearLog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfLogExists(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfSendMailDB(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfReadMailDB(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfDeleteMailDB(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetMailListDB(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfMailCount(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfCalcOfflineReward(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfClaimOfflineReward(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetOfflineReward(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfSetOfflineRate(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfShowEquipEffect(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfHideEquipEffect(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfSetEquipEffect(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetEquipEffect(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfPlayEquipEffect(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfExecuteScript(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfLoadScript(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfUnloadScript(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetScriptVar(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfSetScriptVar(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfLoadPlugin(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfUnloadPlugin(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetPluginStatus(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfExecutePlugin(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetPluginList(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfSetAI(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfGetAI(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfAIAction(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfAIState(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+procedure ActionOfAITrain(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
 
     procedure ConditionOfCheck(PlayObject: TPlayObject; QuestConditionInfo: pTQuestConditionInfo; var Result: Boolean);
     procedure ConditionOfCheckMission(PlayObject: TPlayObject; QuestConditionInfo: pTQuestConditionInfo; var Result: Boolean);
@@ -8841,6 +8940,1941 @@ begin
   PlayObject.TakeOffItem(btWhere, 0, False, boForce);
 end;
 
+// 2011年新增功能实现
+
+procedure TNormNpc.ActionOfSetOnTimer(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nTimerID: Integer;
+  nTime: Integer;
+  sScriptLabel: string;
+begin
+  nTimerID := QuestActionInfo.nParam1;
+  nTime := QuestActionInfo.nParam2 * 1000; // 转换为毫秒
+  sScriptLabel := QuestActionInfo.sParam3;
+  
+  if (nTimerID >= 0) and (nTimerID <= 9) and (nTime > 0) then begin
+    PlayObject.m_dwTimerStart[nTimerID] := GetTickCount;
+    PlayObject.m_dwTimerTime[nTimerID] := nTime;
+    PlayObject.m_sTimerScript[nTimerID] := sScriptLabel;
+    PlayObject.m_boTimerActive[nTimerID] := True;
+    PlayObject.SysMsg('定时器 ' + IntToStr(nTimerID) + ' 已设置，时间：' + IntToStr(QuestActionInfo.nParam2) + ' 秒', c_Blue, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETONTIMER);
+  end;
+end;
+
+procedure TNormNpc.ActionOfSetOffTimer(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nTimerID: Integer;
+begin
+  nTimerID := QuestActionInfo.nParam1;
+  
+  if (nTimerID >= 0) and (nTimerID <= 9) then begin
+    PlayObject.m_boTimerActive[nTimerID] := False;
+    PlayObject.m_dwTimerStart[nTimerID] := 0;
+    PlayObject.m_dwTimerTime[nTimerID] := 0;
+    PlayObject.m_sTimerScript[nTimerID] := '';
+    PlayObject.SysMsg('定时器 ' + IntToStr(nTimerID) + ' 已关闭', c_Blue, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETOFFTIMER);
+  end;
+end;
+
+procedure TNormNpc.ActionOfGoHome(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  PlayObject.SendRefMsg(RM_SPACEMOVE_FIRE, 0, 0, 0, 0, '');
+  PlayObject.SpaceMove(g_Config.sHomeMap, g_Config.nHomeX, g_Config.nHomeY, 0);
+  bo11 := True;
+end;
+
+procedure TNormNpc.ActionOfThrowItem(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sItemName: string;
+  sMapName: string;
+  nX, nY, nRange: Integer;
+  UserItem: pTUserItem;
+  StdItem: pTStdItem;
+  Envir: TEnvirnoment;
+  nTargetX, nTargetY: Integer;
+begin
+  sItemName := QuestActionInfo.sParam1;
+  sMapName := QuestActionInfo.sParam2;
+  nX := QuestActionInfo.nParam3;
+  nY := QuestActionInfo.nParam4;
+  nRange := QuestActionInfo.nParam5;
+  
+  if nRange <= 0 then nRange := 1;
+  
+  Envir := g_MapManager.FindMap(sMapName);
+  if Envir = nil then begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_THROWITEM);
+    Exit;
+  end;
+  
+  New(UserItem);
+  if UserEngine.CopyToUserItemFromName(sItemName, UserItem) then begin
+    StdItem := UserEngine.GetStdItem(UserItem.wIndex);
+    if StdItem <> nil then begin
+      UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+      UserItem.GetMap := sMapName + '(' + IntToStr(nX) + ':' + IntToStr(nY) + ')';
+      UserItem.GetName := m_sCharName;
+      UserItem.GetMode := '脚本投掷';
+      
+      // 在指定范围内随机选择位置
+      nTargetX := nX + Random(nRange * 2 + 1) - nRange;
+      nTargetY := nY + Random(nRange * 2 + 1) - nRange;
+      
+      if (nTargetX >= 0) and (nTargetY >= 0) and (nTargetX < Envir.m_nWidth) and (nTargetY < Envir.m_nHeight) then begin
+        if Envir.CanWalk(nTargetX, nTargetY, True) then begin
+          Envir.AddItemToMap(nTargetX, nTargetY, UserItem);
+        end else begin
+          Dispose(UserItem);
+        end;
+      end else begin
+        Dispose(UserItem);
+      end;
+    end else begin
+      Dispose(UserItem);
+      ScriptActionError(PlayObject, '', QuestActionInfo, sSC_THROWITEM);
+    end;
+  end else begin
+    Dispose(UserItem);
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_THROWITEM);
+  end;
+end;
+
+procedure TNormNpc.ActionOfCheckTeamCount(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  // 这个应该是条件检测函数，不是Action函数，这里先留空
+  // 实际应该在ConditionOf系列函数中实现
+end;
+
+procedure TNormNpc.ActionOfCheckTimeOfSystem(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  // 这个应该是条件检测函数，不是Action函数，这里先留空
+  // 实际应该在ConditionOf系列函数中实现
+end;
+
+procedure TNormNpc.ActionOfAddExpRateMultiple(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nRate: Integer;
+  nTime: Integer;
+begin
+  nRate := QuestActionInfo.nParam1;
+  nTime := QuestActionInfo.nParam2 * 60 * 1000; // 转换为毫秒
+  
+  if (nRate > 0) and (nTime > 0) then begin
+    PlayObject.m_nExpRate := nRate;
+    PlayObject.m_dwExpRateTime := GetTickCount + nTime;
+    PlayObject.SysMsg('经验倍率设置为 ' + IntToStr(nRate) + ' 倍，持续时间 ' + IntToStr(QuestActionInfo.nParam2) + ' 分钟', c_Blue, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_ADDEXPRATEMULTIPLE);
+  end;
+end;
+
+procedure TNormNpc.ActionOfKillMonExpMultiple(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nRate: Integer;
+  nTime: Integer;
+begin
+  nRate := QuestActionInfo.nParam1;
+  nTime := QuestActionInfo.nParam2 * 60 * 1000; // 转换为毫秒
+  
+  if (nRate > 0) and (nTime > 0) then begin
+    PlayObject.m_nKillMonExpRate := nRate * 100; // 原有字段已存在，需要乘以100
+    PlayObject.m_dwKillMonExpRateTime := GetTickCount + nTime;
+    PlayObject.SysMsg('杀怪经验倍率设置为 ' + IntToStr(nRate) + ' 倍，持续时间 ' + IntToStr(QuestActionInfo.nParam2) + ' 分钟', c_Blue, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_KILLMONEXPMULTIPLE);
+  end;
+end;
+
+// 2012年新增功能实现
+
+procedure TNormNpc.ActionOfCheckItemStrengthen(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  btWhere: Byte;
+  nStrengthenLevel: Integer;
+  UserItem: pTUserItem;
+begin
+  btWhere := QuestActionInfo.nParam1;
+  nStrengthenLevel := QuestActionInfo.nParam2;
+  
+  if (btWhere >= 0) and (btWhere <= 12) then begin
+    UserItem := @PlayObject.m_UseItems[btWhere];
+    if UserItem.wIndex > 0 then begin
+      // 检查装备强化等级 - 使用temp1[0]存储强化等级
+      if UserItem.temp1[0] >= nStrengthenLevel then begin
+        PlayObject.m_nVal[QuestActionInfo.nParam3] := 1; // 满足条件
+      end else begin
+        PlayObject.m_nVal[QuestActionInfo.nParam3] := 0; // 不满足条件
+      end;
+    end else begin
+      PlayObject.m_nVal[QuestActionInfo.nParam3] := 0; // 没有装备
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_CHECKITEMSTRENGTHEN);
+  end;
+end;
+
+procedure TNormNpc.ActionOfStrengthenItem(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  btWhere: Byte;
+  nSuccessRate: Integer;
+  UserItem: pTUserItem;
+  StdItem: pTStdItem;
+begin
+  btWhere := QuestActionInfo.nParam1;
+  nSuccessRate := QuestActionInfo.nParam2;
+  
+  if (btWhere >= 0) and (btWhere <= 12) and (nSuccessRate >= 0) and (nSuccessRate <= 100) then begin
+    UserItem := @PlayObject.m_UseItems[btWhere];
+    if UserItem.wIndex > 0 then begin
+      StdItem := UserEngine.GetStdItem(UserItem.wIndex);
+      if StdItem <> nil then begin
+        // 检查是否可以强化 - 使用temp1[0]存储强化等级
+        if UserItem.temp1[0] < 10 then begin // 最大强化等级为10
+          if Random(100) < nSuccessRate then begin
+            Inc(UserItem.temp1[0]);
+            PlayObject.SendUpdateItem(UserItem);
+            PlayObject.SysMsg('装备强化成功！当前强化等级：' + IntToStr(UserItem.temp1[0]), c_Green, t_Hint);
+          end else begin
+            PlayObject.SysMsg('装备强化失败！', c_Red, t_Hint);
+          end;
+        end else begin
+          PlayObject.SysMsg('装备已达到最大强化等级！', c_Red, t_Hint);
+        end;
+      end;
+    end else begin
+      PlayObject.SysMsg('指定位置没有装备！', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_STRENGTHENITEM);
+  end;
+end;
+
+procedure TNormNpc.ActionOfCheckItemCompound(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  btWhere: Byte;
+  nCompoundLevel: Integer;
+  UserItem: pTUserItem;
+begin
+  btWhere := QuestActionInfo.nParam1;
+  nCompoundLevel := QuestActionInfo.nParam2;
+  
+  if (btWhere >= 0) and (btWhere <= 12) then begin
+    UserItem := @PlayObject.m_UseItems[btWhere];
+    if UserItem.wIndex > 0 then begin
+      // 检查装备合成等级 - 使用ComLevel字段
+      if UserItem.ComLevel >= nCompoundLevel then begin
+        PlayObject.m_nVal[QuestActionInfo.nParam3] := 1; // 满足条件
+      end else begin
+        PlayObject.m_nVal[QuestActionInfo.nParam3] := 0; // 不满足条件
+      end;
+    end else begin
+      PlayObject.m_nVal[QuestActionInfo.nParam3] := 0; // 没有装备
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_CHECKITEMCOMPOUND);
+  end;
+end;
+
+procedure TNormNpc.ActionOfCompoundItem(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  btWhere: Byte;
+  nSuccessRate: Integer;
+  UserItem: pTUserItem;
+  StdItem: pTStdItem;
+begin
+  btWhere := QuestActionInfo.nParam1;
+  nSuccessRate := QuestActionInfo.nParam2;
+  
+  if (btWhere >= 0) and (btWhere <= 12) and (nSuccessRate >= 0) and (nSuccessRate <= 100) then begin
+    UserItem := @PlayObject.m_UseItems[btWhere];
+    if UserItem.wIndex > 0 then begin
+      StdItem := UserEngine.GetStdItem(UserItem.wIndex);
+      if StdItem <> nil then begin
+        // 检查是否可以合成 - 使用ComLevel字段
+        if UserItem.ComLevel < 5 then begin // 最大合成等级为5
+          if Random(100) < nSuccessRate then begin
+            Inc(UserItem.ComLevel);
+            PlayObject.SendUpdateItem(UserItem);
+            PlayObject.SysMsg('装备合成成功！当前合成等级：' + IntToStr(UserItem.ComLevel), c_Green, t_Hint);
+          end else begin
+            PlayObject.SysMsg('装备合成失败！', c_Red, t_Hint);
+          end;
+        end else begin
+          PlayObject.SysMsg('装备已达到最大合成等级！', c_Red, t_Hint);
+        end;
+      end;
+    end else begin
+      PlayObject.SysMsg('指定位置没有装备！', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_COMPOUNDITEM);
+  end;
+end;
+
+procedure TNormNpc.ActionOfCheckSuitCount(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nSuitID: Integer;
+  nRequiredCount: Integer;
+  nActualCount: Integer;
+  i: Integer;
+  UserItem: pTUserItem;
+  StdItem: pTStdItem;
+begin
+  nSuitID := QuestActionInfo.nParam1;
+  nRequiredCount := QuestActionInfo.nParam2;
+  nActualCount := 0;
+  
+  // 统计套装数量 - 使用Shape字段作为套装ID（临时方案）
+  for i := 0 to 12 do begin
+    UserItem := @PlayObject.m_UseItems[i];
+    if UserItem.wIndex > 0 then begin
+      StdItem := UserEngine.GetStdItem(UserItem.wIndex);
+      if (StdItem <> nil) and (StdItem.Shape = nSuitID) then begin
+        Inc(nActualCount);
+      end;
+    end;
+  end;
+  
+  // 将结果存储到变量中
+  if nActualCount >= nRequiredCount then begin
+    PlayObject.m_nVal[QuestActionInfo.nParam3] := 1; // 满足条件
+  end else begin
+    PlayObject.m_nVal[QuestActionInfo.nParam3] := 0; // 不满足条件
+  end;
+end;
+
+procedure TNormNpc.ActionOfActivateSuit(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nSuitID: Integer;
+  nEffectType: Integer;
+  nEffectValue: Integer;
+begin
+  nSuitID := QuestActionInfo.nParam1;
+  nEffectType := QuestActionInfo.nParam2;
+  nEffectValue := QuestActionInfo.nParam3;
+  
+  // 激活套装效果
+  case nEffectType of
+    1: PlayObject.m_WAbil.AC := PlayObject.m_WAbil.AC + nEffectValue; // 增加防御
+    2: PlayObject.m_WAbil.MAC := PlayObject.m_WAbil.MAC + nEffectValue; // 增加魔防
+    3: PlayObject.m_WAbil.DC := PlayObject.m_WAbil.DC + nEffectValue; // 增加攻击
+    4: PlayObject.m_WAbil.MC := PlayObject.m_WAbil.MC + nEffectValue; // 增加魔法
+    5: PlayObject.m_WAbil.SC := PlayObject.m_WAbil.SC + nEffectValue; // 增加道术
+  end;
+  
+  PlayObject.RecalcAbilitys();
+  PlayObject.SysMsg('套装效果已激活！', c_Green, t_Hint);
+end;
+
+procedure TNormNpc.ActionOfCheckItemEnlighten(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  btWhere: Byte;
+  nEnlightenLevel: Integer;
+  UserItem: pTUserItem;
+begin
+  btWhere := QuestActionInfo.nParam1;
+  nEnlightenLevel := QuestActionInfo.nParam2;
+  
+  if (btWhere >= 0) and (btWhere <= 12) then begin
+    UserItem := @PlayObject.m_UseItems[btWhere];
+    if UserItem.wIndex > 0 then begin
+      // 检查装备开光等级 - 使用temp1[1]存储开光等级
+      if UserItem.temp1[1] >= nEnlightenLevel then begin
+        PlayObject.m_nVal[QuestActionInfo.nParam3] := 1; // 满足条件
+      end else begin
+        PlayObject.m_nVal[QuestActionInfo.nParam3] := 0; // 不满足条件
+      end;
+    end else begin
+      PlayObject.m_nVal[QuestActionInfo.nParam3] := 0; // 没有装备
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_CHECKITEMENLIGHTEN);
+  end;
+end;
+
+procedure TNormNpc.ActionOfEnlightenItem(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  btWhere: Byte;
+  nSuccessRate: Integer;
+  UserItem: pTUserItem;
+  StdItem: pTStdItem;
+begin
+  btWhere := QuestActionInfo.nParam1;
+  nSuccessRate := QuestActionInfo.nParam2;
+  
+  if (btWhere >= 0) and (btWhere <= 12) and (nSuccessRate >= 0) and (nSuccessRate <= 100) then begin
+    UserItem := @PlayObject.m_UseItems[btWhere];
+    if UserItem.wIndex > 0 then begin
+      StdItem := UserEngine.GetStdItem(UserItem.wIndex);
+      if StdItem <> nil then begin
+        // 检查是否可以开光 - 使用temp1[1]存储开光等级
+        if UserItem.temp1[1] < 3 then begin // 最大开光等级为3
+          if Random(100) < nSuccessRate then begin
+            Inc(UserItem.temp1[1]);
+            PlayObject.SendUpdateItem(UserItem);
+            PlayObject.SysMsg('装备开光成功！当前开光等级：' + IntToStr(UserItem.temp1[1]), c_Green, t_Hint);
+          end else begin
+            PlayObject.SysMsg('装备开光失败！', c_Red, t_Hint);
+          end;
+        end else begin
+          PlayObject.SysMsg('装备已达到最大开光等级！', c_Red, t_Hint);
+        end;
+      end;
+    end else begin
+      PlayObject.SysMsg('指定位置没有装备！', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_ENLIGHTENITEM);
+  end;
+end;
+
+// 2012年新增功能 - 重新刷新装备的极品属性
+procedure TNormNpc.ActionOfRefreshValue(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nItemIdx: Integer;
+  UserItem: pTUserItem;
+begin
+  nItemIdx := QuestActionInfo.nParam1;
+  
+  if nItemIdx >= 0 then begin
+    UserItem := PlayObject.GetUserItemByMakeIndex(nItemIdx);
+    if UserItem <> nil then begin
+      PlayObject.SendUpdateItem(UserItem);
+      PlayObject.SysMsg('装备属性已刷新', c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('找不到指定装备', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_REFRESHVALUE);
+  end;
+end;
+
+// 2012年新增功能 - 配合ChangeGiveItem命令调整物品属性
+procedure TNormNpc.ActionOfHookItemIdx(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nItemIdx: Integer;
+begin
+  nItemIdx := QuestActionInfo.nParam1;
+  
+  if nItemIdx >= 0 then begin
+    PlayObject.m_nHookItemIdx := nItemIdx;
+    PlayObject.SysMsg('已锁定装备ID: ' + IntToStr(nItemIdx), c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_HOOKITEMIDX);
+  end;
+end;
+
+// 2012年新增功能 - 动态调整全服杀怪经验
+procedure TNormNpc.ActionOfKillMonExpMultiple(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nMultiple: Integer;
+  nDuration: Integer;
+begin
+  nMultiple := QuestActionInfo.nParam1;
+  nDuration := QuestActionInfo.nParam2;
+  
+  if (nMultiple > 0) and (nDuration > 0) then begin
+    g_Config.nKillMonExpMultiple := nMultiple;
+    g_Config.dwKillMonExpMultipleTime := GetTickCount + (nDuration * 60 * 1000); // 转换为毫秒
+    UserEngine.SendBroadCastMsg('全服杀怪经验倍数调整为: ' + IntToStr(nMultiple) + '倍，持续' + IntToStr(nDuration) + '分钟', t_System);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_KILLMONEXPMULTIPLE);
+  end;
+end;
+
+// 2012年新增功能 - 呼出特定界面
+procedure TNormNpc.ActionOfOpenUpgradeDialog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nDialogType: Integer;
+begin
+  nDialogType := QuestActionInfo.nParam1;
+  
+  if (nDialogType >= 0) and (nDialogType <= 1) then begin
+    PlayObject.SendDefMsg(PlayObject, SM_OPENUPGRADEDIALOG, nDialogType, 0, 0, 0, '');
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_OPENUPGRADEDIALOG);
+  end;
+end;
+
+// 2012年新增功能 - 用脚本在指定位置创建一个文本文件
+procedure TNormNpc.ActionOfCreateFile(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sFilePath: string;
+  sContent: string;
+  FileStream: TFileStream;
+begin
+  sFilePath := QuestActionInfo.sParam1;
+  sContent := QuestActionInfo.sParam2;
+  
+  if (sFilePath <> '') then begin
+    try
+      if FileExists(sFilePath) then begin
+        PlayObject.SysMsg('文件已存在', c_Red, t_Hint);
+      end else begin
+        FileStream := TFileStream.Create(sFilePath, fmCreate);
+        try
+          if sContent <> '' then begin
+            FileStream.WriteBuffer(sContent[1], Length(sContent));
+          end;
+        finally
+          FileStream.Free;
+        end;
+        PlayObject.SysMsg('文件创建成功: ' + sFilePath, c_Green, t_Hint);
+      end;
+    except
+      on E: Exception do begin
+        PlayObject.SysMsg('文件创建失败: ' + E.Message, c_Red, t_Hint);
+      end;
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_CREATEFILE);
+  end;
+end;
+
+// 2012年新增功能 - 收走指定MakeIndex的物品
+procedure TNormNpc.ActionOfTakeIdx(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nItemIdx: Integer;
+  UserItem: pTUserItem;
+begin
+  nItemIdx := QuestActionInfo.nParam1;
+  
+  if nItemIdx >= 0 then begin
+    UserItem := PlayObject.GetUserItemByMakeIndex(nItemIdx);
+    if UserItem <> nil then begin
+      PlayObject.SendDelItems(UserItem);
+      UserItem.wIndex := 0;
+      PlayObject.SysMsg('物品已收走', c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('找不到指定物品', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_TAKEIDX);
+  end;
+end;
+
+// 2012年新增功能 - 设置装备品质
+procedure TNormNpc.ActionOfSetItemQuality(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nItemIdx: Integer;
+  nQuality: Integer;
+  UserItem: pTUserItem;
+begin
+  nItemIdx := QuestActionInfo.nParam1;
+  nQuality := QuestActionInfo.nParam2;
+  
+  if (nItemIdx >= 0) and (nQuality >= 0) and (nQuality <= 4) then begin
+    UserItem := PlayObject.GetUserItemByMakeIndex(nItemIdx);
+    if UserItem <> nil then begin
+      UserItem.temp1[1] := nQuality; // 使用temp1[1]存储品质等级
+      PlayObject.SendUpdateItem(UserItem);
+      PlayObject.SysMsg('装备品质已设置为: ' + IntToStr(nQuality) + '阶', c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('找不到指定装备', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETITEMQUALITY);
+  end;
+end;
+
+// 2012年新增功能 - 获取装备品质
+procedure TNormNpc.ActionOfGetItemQuality(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nItemIdx: Integer;
+  nQuality: Integer;
+  UserItem: pTUserItem;
+begin
+  nItemIdx := QuestActionInfo.nParam1;
+  
+  if nItemIdx >= 0 then begin
+    UserItem := PlayObject.GetUserItemByMakeIndex(nItemIdx);
+    if UserItem <> nil then begin
+      nQuality := UserItem.temp1[1]; // 获取品质等级
+      PlayObject.SysMsg('装备品质为: ' + IntToStr(nQuality) + '阶', c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('找不到指定装备', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_GETITEMQUALITY);
+  end;
+end;
+
+// 2012年新增功能 - 设置装备特效
+procedure TNormNpc.ActionOfSetItemEffect(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nItemIdx: Integer;
+  nEffect: Integer;
+  UserItem: pTUserItem;
+begin
+  nItemIdx := QuestActionInfo.nParam1;
+  nEffect := QuestActionInfo.nParam2;
+  
+  if (nItemIdx >= 0) and (nEffect >= 0) and (nEffect <= 9) then begin
+    UserItem := PlayObject.GetUserItemByMakeIndex(nItemIdx);
+    if UserItem <> nil then begin
+      UserItem.temp1[2] := nEffect; // 使用temp1[2]存储特效等级
+      PlayObject.SendUpdateItem(UserItem);
+      PlayObject.SysMsg('装备特效已设置为: ' + IntToStr(nEffect), c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('找不到指定装备', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETITEMEFFECT);
+  end;
+end;
+
+// 2012年新增功能 - 获取装备特效
+procedure TNormNpc.ActionOfGetItemEffect(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nItemIdx: Integer;
+  nEffect: Integer;
+  UserItem: pTUserItem;
+begin
+  nItemIdx := QuestActionInfo.nParam1;
+  
+  if nItemIdx >= 0 then begin
+    UserItem := PlayObject.GetUserItemByMakeIndex(nItemIdx);
+    if UserItem <> nil then begin
+      nEffect := UserItem.temp1[2]; // 获取特效等级
+      PlayObject.SysMsg('装备特效为: ' + IntToStr(nEffect), c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('找不到指定装备', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_GETITEMEFFECT);
+  end;
+end;
+
+// 2012年新增功能 - 发送邮件
+procedure TNormNpc.ActionOfSendMail(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sToName, sTitle, sContent: string;
+  nGold: Integer;
+  nItemIdx: Integer;
+begin
+  sToName := QuestActionInfo.sParam1;
+  sTitle := QuestActionInfo.sParam2;
+  sContent := QuestActionInfo.sParam3;
+  nGold := QuestActionInfo.nParam4;
+  nItemIdx := QuestActionInfo.nParam5;
+  
+  if (sToName <> '') and (sTitle <> '') then begin
+    // 这里应该调用邮件系统的发送接口
+    // 由于邮件系统需要数据库支持，这里只做基础框架
+    PlayObject.SysMsg('邮件发送功能已调用', c_Green, t_Hint);
+    PlayObject.SysMsg('收件人: ' + sToName, c_Green, t_Hint);
+    PlayObject.SysMsg('标题: ' + sTitle, c_Green, t_Hint);
+    if sContent <> '' then
+      PlayObject.SysMsg('内容: ' + sContent, c_Green, t_Hint);
+    if nGold > 0 then
+      PlayObject.SysMsg('金币: ' + IntToStr(nGold), c_Green, t_Hint);
+    if nItemIdx > 0 then
+      PlayObject.SysMsg('物品ID: ' + IntToStr(nItemIdx), c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SENDMAIL);
+  end;
+end;
+
+// 2012年新增功能 - 读取邮件
+procedure TNormNpc.ActionOfReadMail(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nMailId: Integer;
+begin
+  nMailId := QuestActionInfo.nParam1;
+  
+  if nMailId >= 0 then begin
+    // 这里应该调用邮件系统的读取接口
+    PlayObject.SysMsg('读取邮件ID: ' + IntToStr(nMailId), c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_READMAIL);
+  end;
+end;
+
+// 2012年新增功能 - 删除邮件
+procedure TNormNpc.ActionOfDeleteMail(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nMailId: Integer;
+begin
+  nMailId := QuestActionInfo.nParam1;
+  
+  if nMailId >= 0 then begin
+    // 这里应该调用邮件系统的删除接口
+    PlayObject.SysMsg('删除邮件ID: ' + IntToStr(nMailId), c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_DELETEMAIL);
+  end;
+end;
+
+// 2012年新增功能 - 获取邮件列表
+procedure TNormNpc.ActionOfGetMailList(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  // 这里应该调用邮件系统的列表接口
+  PlayObject.SysMsg('获取邮件列表', c_Green, t_Hint);
+end;
+
+// 2012年新增功能 - 开始离线挂机
+procedure TNormNpc.ActionOfStartOffline(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nDuration: Integer;
+  sMapName: string;
+begin
+  nDuration := QuestActionInfo.nParam1;
+  sMapName := QuestActionInfo.sParam1;
+  
+  if nDuration > 0 then begin
+    // 这里应该调用离线挂机系统的开始接口
+    PlayObject.m_boOfflineMode := True;
+    PlayObject.m_dwOfflineStartTime := GetTickCount;
+    PlayObject.m_dwOfflineDuration := nDuration * 60 * 1000; // 转换为毫秒
+    if sMapName <> '' then begin
+      PlayObject.m_sOfflineMapName := sMapName;
+    end else begin
+      PlayObject.m_sOfflineMapName := PlayObject.m_PEnvir.sMapName;
+    end;
+    
+    PlayObject.SysMsg('离线挂机已开始', c_Green, t_Hint);
+    PlayObject.SysMsg('挂机时间: ' + IntToStr(nDuration) + '分钟', c_Green, t_Hint);
+    PlayObject.SysMsg('挂机地图: ' + PlayObject.m_sOfflineMapName, c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_STARTOFFLINE);
+  end;
+end;
+
+// 2012年新增功能 - 停止离线挂机
+procedure TNormNpc.ActionOfStopOffline(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  if PlayObject.m_boOfflineMode then begin
+    PlayObject.m_boOfflineMode := False;
+    PlayObject.m_dwOfflineStartTime := 0;
+    PlayObject.m_dwOfflineDuration := 0;
+    PlayObject.m_sOfflineMapName := '';
+    
+    PlayObject.SysMsg('离线挂机已停止', c_Green, t_Hint);
+  end else begin
+    PlayObject.SysMsg('当前没有进行离线挂机', c_Red, t_Hint);
+  end;
+end;
+
+// 2012年新增功能 - 检查离线挂机状态
+procedure TNormNpc.ActionOfCheckOffline(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  dwRemainingTime: LongWord;
+begin
+  if PlayObject.m_boOfflineMode then begin
+    dwRemainingTime := (PlayObject.m_dwOfflineStartTime + PlayObject.m_dwOfflineDuration - GetTickCount) div 1000;
+    PlayObject.SysMsg('离线挂机状态: 进行中', c_Green, t_Hint);
+    PlayObject.SysMsg('剩余时间: ' + IntToStr(dwRemainingTime div 60) + '分' + IntToStr(dwRemainingTime mod 60) + '秒', c_Green, t_Hint);
+    PlayObject.SysMsg('挂机地图: ' + PlayObject.m_sOfflineMapName, c_Green, t_Hint);
+  end else begin
+    PlayObject.SysMsg('离线挂机状态: 未开始', c_Red, t_Hint);
+  end;
+end;
+
+// 2012年新增功能 - 检测装备品质
+procedure TNormNpc.ConditionOfCheckItemQuality(PlayObject: TPlayObject; QuestConditionInfo: pTQuestConditionInfo; var Result: Boolean);
+var
+  nItemIdx: Integer;
+  nQuality: Integer;
+  nRequiredQuality: Integer;
+  UserItem: pTUserItem;
+begin
+  nItemIdx := QuestConditionInfo.nParam1;
+  nRequiredQuality := QuestConditionInfo.nParam2;
+  
+  if (nItemIdx >= 0) and (nRequiredQuality >= 0) then begin
+    UserItem := PlayObject.GetUserItemByMakeIndex(nItemIdx);
+    if UserItem <> nil then begin
+      nQuality := UserItem.temp1[1]; // 获取品质等级
+      Result := (nQuality >= nRequiredQuality);
+    end else begin
+      Result := False;
+    end;
+  end else begin
+    Result := False;
+  end;
+end;
+
+// 2012年新增功能 - 检测装备特效
+procedure TNormNpc.ConditionOfCheckItemEffect(PlayObject: TPlayObject; QuestConditionInfo: pTQuestConditionInfo; var Result: Boolean);
+var
+  nItemIdx: Integer;
+  nEffect: Integer;
+  nRequiredEffect: Integer;
+  UserItem: pTUserItem;
+begin
+  nItemIdx := QuestConditionInfo.nParam1;
+  nRequiredEffect := QuestConditionInfo.nParam2;
+  
+  if (nItemIdx >= 0) and (nRequiredEffect >= 0) then begin
+    UserItem := PlayObject.GetUserItemByMakeIndex(nItemIdx);
+    if UserItem <> nil then begin
+      nEffect := UserItem.temp1[2]; // 获取特效等级
+      Result := (nEffect >= nRequiredEffect);
+    end else begin
+      Result := False;
+    end;
+  end else begin
+    Result := False;
+  end;
+end;
+
+// 2012年新增功能 - 检测离线挂机时间
+procedure TNormNpc.ConditionOfCheckOfflineTime(PlayObject: TPlayObject; QuestConditionInfo: pTQuestConditionInfo; var Result: Boolean);
+var
+  nRequiredMinutes: Integer;
+  dwOfflineTime: LongWord;
+begin
+  nRequiredMinutes := QuestConditionInfo.nParam1;
+  
+  if (nRequiredMinutes > 0) and PlayObject.m_boOfflineMode then begin
+    dwOfflineTime := (GetTickCount - PlayObject.m_dwOfflineStartTime) div (60 * 1000); // 转换为分钟
+    Result := (dwOfflineTime >= nRequiredMinutes);
+  end else begin
+    Result := False;
+  end;
+end;
+
+// 2012年新增功能 - 设置怪物攻击模式
+procedure TNormNpc.ActionOfSetMonsterAttackMode(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sMonsterName: string;
+  nAttackMode: Integer;
+  Monster: TBaseObject;
+begin
+  sMonsterName := QuestActionInfo.sParam1;
+  nAttackMode := QuestActionInfo.nParam1;
+  
+  if (sMonsterName <> '') and (nAttackMode >= 0) and (nAttackMode <= 9) then begin
+    // 查找指定怪物
+    Monster := PlayObject.m_PEnvir.GetBaseObject(sMonsterName, TBaseObject);
+    if Monster <> nil then begin
+      // 设置怪物攻击模式
+      Monster.m_nAttackMode := nAttackMode;
+      PlayObject.SysMsg('怪物 ' + sMonsterName + ' 攻击模式已设置为: ' + IntToStr(nAttackMode), c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('找不到指定怪物: ' + sMonsterName, c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETMONSTERATTACKMODE);
+  end;
+end;
+
+// 2012年新增功能 - 获取怪物攻击模式
+procedure TNormNpc.ActionOfGetMonsterAttackMode(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sMonsterName: string;
+  Monster: TBaseObject;
+begin
+  sMonsterName := QuestActionInfo.sParam1;
+  
+  if sMonsterName <> '' then begin
+    Monster := PlayObject.m_PEnvir.GetBaseObject(sMonsterName, TBaseObject);
+    if Monster <> nil then begin
+      PlayObject.SysMsg('怪物 ' + sMonsterName + ' 攻击模式为: ' + IntToStr(Monster.m_nAttackMode), c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('找不到指定怪物: ' + sMonsterName, c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_GETMONSTERATTACKMODE);
+  end;
+end;
+
+// 2012年新增功能 - 设置怪物攻击范围
+procedure TNormNpc.ActionOfSetMonsterAttackRange(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sMonsterName: string;
+  nAttackRange: Integer;
+  Monster: TBaseObject;
+begin
+  sMonsterName := QuestActionInfo.sParam1;
+  nAttackRange := QuestActionInfo.nParam1;
+  
+  if (sMonsterName <> '') and (nAttackRange >= 1) and (nAttackRange <= 10) then begin
+    Monster := PlayObject.m_PEnvir.GetBaseObject(sMonsterName, TBaseObject);
+    if Monster <> nil then begin
+      // 设置怪物攻击范围
+      Monster.m_nAttackRange := nAttackRange;
+      PlayObject.SysMsg('怪物 ' + sMonsterName + ' 攻击范围已设置为: ' + IntToStr(nAttackRange), c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('找不到指定怪物: ' + sMonsterName, c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETMONSTERATTACKRANGE);
+  end;
+end;
+
+// 2012年新增功能 - 获取怪物攻击范围
+procedure TNormNpc.ActionOfGetMonsterAttackRange(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sMonsterName: string;
+  Monster: TBaseObject;
+begin
+  sMonsterName := QuestActionInfo.sParam1;
+  
+  if sMonsterName <> '' then begin
+    Monster := PlayObject.m_PEnvir.GetBaseObject(sMonsterName, TBaseObject);
+    if Monster <> nil then begin
+      PlayObject.SysMsg('怪物 ' + sMonsterName + ' 攻击范围为: ' + IntToStr(Monster.m_nAttackRange), c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('找不到指定怪物: ' + sMonsterName, c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_GETMONSTERATTACKRANGE);
+  end;
+end;
+
+// 2012年新增功能 - 升级坐骑
+procedure TNormNpc.ActionOfUpgradeHorse(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nUpgradeLevel: Integer;
+begin
+  nUpgradeLevel := QuestActionInfo.nParam1;
+  
+  if (nUpgradeLevel > 0) and (nUpgradeLevel <= 10) then begin
+    if PlayObject.m_UseItems[U_House].wIndex > 0 then begin
+      // 升级坐骑等级
+      PlayObject.m_nHorseLevel := PlayObject.m_nHorseLevel + nUpgradeLevel;
+      if PlayObject.m_nHorseLevel > 100 then
+        PlayObject.m_nHorseLevel := 100;
+      
+      PlayObject.SysMsg('坐骑升级成功', c_Green, t_Hint);
+      PlayObject.SysMsg('当前坐骑等级: ' + IntToStr(PlayObject.m_nHorseLevel), c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('您没有坐骑', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_UPGRADEHORSE);
+  end;
+end;
+
+// 2012年新增功能 - 获取坐骑等级
+procedure TNormNpc.ActionOfGetHorseLevel(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  if PlayObject.m_UseItems[U_House].wIndex > 0 then begin
+    PlayObject.SysMsg('坐骑等级: ' + IntToStr(PlayObject.m_nHorseLevel), c_Green, t_Hint);
+  end else begin
+    PlayObject.SysMsg('您没有坐骑', c_Red, t_Hint);
+  end;
+end;
+
+// 2012年新增功能 - 设置坐骑技能
+procedure TNormNpc.ActionOfSetHorseSkill(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nSkillId: Integer;
+  nSkillLevel: Integer;
+begin
+  nSkillId := QuestActionInfo.nParam1;
+  nSkillLevel := QuestActionInfo.nParam2;
+  
+  if (nSkillId >= 0) and (nSkillId <= 9) and (nSkillLevel >= 0) and (nSkillLevel <= 3) then begin
+    if PlayObject.m_UseItems[U_House].wIndex > 0 then begin
+      // 设置坐骑技能
+      PlayObject.m_nHorseSkills[nSkillId] := nSkillLevel;
+      PlayObject.SysMsg('坐骑技能设置成功', c_Green, t_Hint);
+      PlayObject.SysMsg('技能ID: ' + IntToStr(nSkillId) + ', 等级: ' + IntToStr(nSkillLevel), c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('您没有坐骑', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETHORSESKILL);
+  end;
+end;
+
+// 2012年新增功能 - 获取坐骑技能
+procedure TNormNpc.ActionOfGetHorseSkill(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nSkillId: Integer;
+begin
+  nSkillId := QuestActionInfo.nParam1;
+  
+  if (nSkillId >= 0) and (nSkillId <= 9) then begin
+    if PlayObject.m_UseItems[U_House].wIndex > 0 then begin
+      PlayObject.SysMsg('坐骑技能ID ' + IntToStr(nSkillId) + ' 等级: ' + IntToStr(PlayObject.m_nHorseSkills[nSkillId]), c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('您没有坐骑', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_GETHORSESKILL);
+  end;
+end;
+
+// 2012年新增功能 - 打开皮肤商城对话框
+procedure TNormNpc.ActionOfOpenSkinDialog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  // 这里应该调用客户端打开皮肤商城对话框
+  PlayObject.SysMsg('皮肤商城对话框已打开', c_Green, t_Hint);
+  // PlayObject.SendMsg(PlayObject, RM_OPENSKINDIALOG, 0, 0, 0, 0, '');
+end;
+
+// 2012年新增功能 - 打开充值对话框
+procedure TNormNpc.ActionOfOpenTopupDialog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  // 这里应该调用客户端打开充值对话框
+  PlayObject.SysMsg('充值对话框已打开', c_Green, t_Hint);
+  // PlayObject.SendMsg(PlayObject, RM_OPENTOPUPDIALOG, 0, 0, 0, 0, '');
+end;
+
+// 2012年新增功能 - 打开VIP对话框
+procedure TNormNpc.ActionOfOpenVipDialog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  // 这里应该调用客户端打开VIP对话框
+  PlayObject.SysMsg('VIP对话框已打开', c_Green, t_Hint);
+  // PlayObject.SendMsg(PlayObject, RM_OPENVIPDIALOG, 0, 0, 0, 0, '');
+end;
+
+// 2012年新增功能 - 打开充值对话框
+procedure TNormNpc.ActionOfOpenRechargeDialog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  // 这里应该调用客户端打开充值对话框
+  PlayObject.SysMsg('充值对话框已打开', c_Green, t_Hint);
+  // PlayObject.SendMsg(PlayObject, RM_OPENRECHARGEDIALOG, 0, 0, 0, 0, '');
+end;
+
+// 2012年新增功能 - 增加技能经验
+procedure TNormNpc.ActionOfAddSkillExp(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nSkillIdx: Integer;
+  nExpAmount: Integer;
+  UserMagic: pTUserMagic;
+begin
+  nSkillIdx := QuestActionInfo.nParam1;
+  nExpAmount := QuestActionInfo.nParam2;
+  
+  if (nSkillIdx >= 0) and (nExpAmount > 0) then begin
+    UserMagic := PlayObject.GetMagicByID(nSkillIdx);
+    if UserMagic <> nil then begin
+      UserMagic.btTranPoint := UserMagic.btTranPoint + nExpAmount;
+      PlayObject.SendAddMagic(UserMagic);
+      PlayObject.SysMsg('技能 ' + IntToStr(nSkillIdx) + ' 经验增加: ' + IntToStr(nExpAmount), c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('技能不存在: ' + IntToStr(nSkillIdx), c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_ADDSKILLEXP);
+  end;
+end;
+
+// 2012年新增功能 - 设置技能经验
+procedure TNormNpc.ActionOfSetSkillExp(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nSkillIdx: Integer;
+  nExpAmount: Integer;
+  UserMagic: pTUserMagic;
+begin
+  nSkillIdx := QuestActionInfo.nParam1;
+  nExpAmount := QuestActionInfo.nParam2;
+  
+  if (nSkillIdx >= 0) and (nExpAmount >= 0) then begin
+    UserMagic := PlayObject.GetMagicByID(nSkillIdx);
+    if UserMagic <> nil then begin
+      UserMagic.btTranPoint := nExpAmount;
+      PlayObject.SendAddMagic(UserMagic);
+      PlayObject.SysMsg('技能 ' + IntToStr(nSkillIdx) + ' 经验设置为: ' + IntToStr(nExpAmount), c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('技能不存在: ' + IntToStr(nSkillIdx), c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETSKILLEXP);
+  end;
+end;
+
+// 2012年新增功能 - 获取技能经验
+procedure TNormNpc.ActionOfGetSkillExp(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nSkillIdx: Integer;
+  UserMagic: pTUserMagic;
+begin
+  nSkillIdx := QuestActionInfo.nParam1;
+  
+  if nSkillIdx >= 0 then begin
+    UserMagic := PlayObject.GetMagicByID(nSkillIdx);
+    if UserMagic <> nil then begin
+      PlayObject.SysMsg('技能 ' + IntToStr(nSkillIdx) + ' 经验: ' + IntToStr(UserMagic.btTranPoint), c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('技能不存在: ' + IntToStr(nSkillIdx), c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_GETSKILLEXP);
+  end;
+end;
+
+// 2012年新增功能 - 重置技能
+procedure TNormNpc.ActionOfResetSkill(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nSkillIdx: Integer;
+  UserMagic: pTUserMagic;
+begin
+  nSkillIdx := QuestActionInfo.nParam1;
+  
+  if nSkillIdx >= 0 then begin
+    UserMagic := PlayObject.GetMagicByID(nSkillIdx);
+    if UserMagic <> nil then begin
+      UserMagic.btLevel := 0;
+      UserMagic.btTranPoint := 0;
+      PlayObject.SendAddMagic(UserMagic);
+      PlayObject.SysMsg('技能 ' + IntToStr(nSkillIdx) + ' 已重置', c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('技能不存在: ' + IntToStr(nSkillIdx), c_Red, t_Hint);
+    end;
+  end else if nSkillIdx = -1 then begin
+    // 重置所有技能
+    PlayObject.ResetAllSkills;
+    PlayObject.SysMsg('所有技能已重置', c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_RESETSKILL);
+  end;
+end;
+
+// 2012年新增功能 - 学会所有技能
+procedure TNormNpc.ActionOfLearnAllSkills(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nLevel: Integer;
+begin
+  nLevel := QuestActionInfo.nParam1;
+  
+  if (nLevel >= 0) and (nLevel <= 3) then begin
+    PlayObject.LearnAllSkills(nLevel);
+    PlayObject.SysMsg('已学会所有技能，等级: ' + IntToStr(nLevel), c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_LEARNALLSKILLS);
+  end;
+end;
+
+// 2012年新增功能 - 设置玩家标志
+procedure TNormNpc.ActionOfSetPlayerFlag(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nFlagId: Integer;
+  nValue: Integer;
+begin
+  nFlagId := QuestActionInfo.nParam1;
+  nValue := QuestActionInfo.nParam2;
+  
+  if (nFlagId >= 0) and (nFlagId <= 99) then begin
+    PlayObject.m_nPlayerFlags[nFlagId] := nValue;
+    PlayObject.SysMsg('玩家标志 ' + IntToStr(nFlagId) + ' 设置为: ' + IntToStr(nValue), c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETPLAYERFLAG);
+  end;
+end;
+
+// 2012年新增功能 - 获取玩家标志
+procedure TNormNpc.ActionOfGetPlayerFlag(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nFlagId: Integer;
+begin
+  nFlagId := QuestActionInfo.nParam1;
+  
+  if (nFlagId >= 0) and (nFlagId <= 99) then begin
+    PlayObject.SysMsg('玩家标志 ' + IntToStr(nFlagId) + ' 值为: ' + IntToStr(PlayObject.m_nPlayerFlags[nFlagId]), c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_GETPLAYERFLAG);
+  end;
+end;
+
+// 2012年新增功能 - 设置玩家数据
+procedure TNormNpc.ActionOfSetPlayerData(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sDataKey: string;
+  sDataValue: string;
+begin
+  sDataKey := QuestActionInfo.sParam1;
+  sDataValue := QuestActionInfo.sParam2;
+  
+  if sDataKey <> '' then begin
+    PlayObject.m_sPlayerData.Values[sDataKey] := sDataValue;
+    PlayObject.SysMsg('玩家数据 ' + sDataKey + ' 设置为: ' + sDataValue, c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETPLAYERDATA);
+  end;
+end;
+
+// 2012年新增功能 - 获取玩家数据
+procedure TNormNpc.ActionOfGetPlayerData(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sDataKey: string;
+  sDataValue: string;
+begin
+  sDataKey := QuestActionInfo.sParam1;
+  
+  if sDataKey <> '' then begin
+    sDataValue := PlayObject.m_sPlayerData.Values[sDataKey];
+    if sDataValue <> '' then begin
+      PlayObject.SysMsg('玩家数据 ' + sDataKey + ' 值为: ' + sDataValue, c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('玩家数据 ' + sDataKey + ' 不存在', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_GETPLAYERDATA);
+  end;
+end;
+
+// 2012年新增功能 - 执行函数
+procedure TNormNpc.ActionOfExecuteFunction(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sFunctionName: string;
+  sParameters: string;
+begin
+  sFunctionName := QuestActionInfo.sParam1;
+  sParameters := QuestActionInfo.sParam2;
+  
+  if sFunctionName <> '' then begin
+    // 这里应该调用动态函数执行系统
+    PlayObject.SysMsg('执行函数: ' + sFunctionName, c_Green, t_Hint);
+    if sParameters <> '' then begin
+      PlayObject.SysMsg('参数: ' + sParameters, c_Green, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_EXECUTEFUNCTION);
+  end;
+end;
+
+// 2012年新增功能 - 设置缓存
+procedure TNormNpc.ActionOfSetCache(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sCacheKey: string;
+  sCacheValue: string;
+  nExpireTime: Integer;
+begin
+  sCacheKey := QuestActionInfo.sParam1;
+  sCacheValue := QuestActionInfo.sParam2;
+  nExpireTime := QuestActionInfo.nParam1;
+  
+  if sCacheKey <> '' then begin
+    if nExpireTime > 0 then begin
+      // 设置带过期时间的缓存
+      PlayObject.SetCacheWithExpire(sCacheKey, sCacheValue, nExpireTime);
+      PlayObject.SysMsg('缓存已设置，过期时间: ' + IntToStr(nExpireTime) + '秒', c_Green, t_Hint);
+    end else begin
+      // 设置永久缓存
+      PlayObject.SetCache(sCacheKey, sCacheValue);
+      PlayObject.SysMsg('缓存已设置', c_Green, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETCACHE);
+  end;
+end;
+
+// 2012年新增功能 - 获取缓存
+procedure TNormNpc.ActionOfGetCache(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sCacheKey: string;
+  sCacheValue: string;
+begin
+  sCacheKey := QuestActionInfo.sParam1;
+  
+  if sCacheKey <> '' then begin
+    sCacheValue := PlayObject.GetCache(sCacheKey);
+    if sCacheValue <> '' then begin
+      PlayObject.SysMsg('缓存值: ' + sCacheValue, c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('缓存不存在或已过期', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_GETCACHE);
+  end;
+end;
+
+// 2012年新增功能 - 清除缓存
+procedure TNormNpc.ActionOfClearCache(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sCacheKey: string;
+begin
+  sCacheKey := QuestActionInfo.sParam1;
+  
+  if sCacheKey <> '' then begin
+    if PlayObject.ClearCache(sCacheKey) then begin
+      PlayObject.SysMsg('缓存已清除', c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('缓存不存在', c_Red, t_Hint);
+    end;
+  end else begin
+    // 清除所有缓存
+    PlayObject.ClearAllCache;
+    PlayObject.SysMsg('所有缓存已清除', c_Green, t_Hint);
+  end;
+end;
+
+// 2012年新增功能 - 检查缓存是否存在
+procedure TNormNpc.ActionOfCacheExists(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sCacheKey: string;
+begin
+  sCacheKey := QuestActionInfo.sParam1;
+  
+  if sCacheKey <> '' then begin
+    if PlayObject.CacheExists(sCacheKey) then begin
+      PlayObject.SysMsg('缓存存在', c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('缓存不存在', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_CACHEEXISTS);
+  end;
+end;
+
+// 2012年新增功能 - 写入日志
+procedure TNormNpc.ActionOfWriteLog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sLogType: string;
+  sLogContent: string;
+  sLogLevel: string;
+begin
+  sLogType := QuestActionInfo.sParam1;
+  sLogContent := QuestActionInfo.sParam2;
+  sLogLevel := QuestActionInfo.sParam3;
+  
+  if (sLogType <> '') and (sLogContent <> '') then begin
+    if sLogLevel = '' then sLogLevel := 'INFO';
+    PlayObject.WriteLog(sLogType, sLogContent, sLogLevel);
+    PlayObject.SysMsg('日志已写入: ' + sLogType, c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_WRITELOG);
+  end;
+end;
+
+// 2012年新增功能 - 读取日志
+procedure TNormNpc.ActionOfReadLog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sLogType: string;
+  nLineCount: Integer;
+  sLogContent: string;
+begin
+  sLogType := QuestActionInfo.sParam1;
+  nLineCount := QuestActionInfo.nParam1;
+  
+  if sLogType <> '' then begin
+    if nLineCount <= 0 then nLineCount := 10;
+    sLogContent := PlayObject.ReadLog(sLogType, nLineCount);
+    if sLogContent <> '' then begin
+      PlayObject.SysMsg('日志内容: ' + sLogContent, c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('日志不存在或为空', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_READLOG);
+  end;
+end;
+
+// 2012年新增功能 - 清除日志
+procedure TNormNpc.ActionOfClearLog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sLogType: string;
+begin
+  sLogType := QuestActionInfo.sParam1;
+  
+  if sLogType <> '' then begin
+    if PlayObject.ClearLog(sLogType) then begin
+      PlayObject.SysMsg('日志已清除: ' + sLogType, c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('日志不存在: ' + sLogType, c_Red, t_Hint);
+    end;
+  end else begin
+    // 清除所有日志
+    PlayObject.ClearAllLogs;
+    PlayObject.SysMsg('所有日志已清除', c_Green, t_Hint);
+  end;
+end;
+
+// 2012年新增功能 - 检查日志是否存在
+procedure TNormNpc.ActionOfLogExists(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sLogType: string;
+begin
+  sLogType := QuestActionInfo.sParam1;
+  
+  if sLogType <> '' then begin
+    if PlayObject.LogExists(sLogType) then begin
+      PlayObject.SysMsg('日志存在: ' + sLogType, c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('日志不存在: ' + sLogType, c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_LOGEXISTS);
+  end;
+end;
+
+// 2012年新增功能 - 发送邮件到数据库
+procedure TNormNpc.ActionOfSendMailDB(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sToPlayer: string;
+  sSubject: string;
+  sContent: string;
+  sAttachments: string;
+  nMailId: Integer;
+begin
+  sToPlayer := QuestActionInfo.sParam1;
+  sSubject := QuestActionInfo.sParam2;
+  sContent := QuestActionInfo.sParam3;
+  sAttachments := QuestActionInfo.sParam4;
+  
+  if (sToPlayer <> '') and (sSubject <> '') and (sContent <> '') then begin
+    nMailId := PlayObject.SendMailToDatabase(sToPlayer, sSubject, sContent, sAttachments);
+    if nMailId > 0 then begin
+      PlayObject.SysMsg('邮件已发送到数据库，ID: ' + IntToStr(nMailId), c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('邮件发送失败', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SENDMAILDB);
+  end;
+end;
+
+// 2012年新增功能 - 从数据库读取邮件
+procedure TNormNpc.ActionOfReadMailDB(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nMailId: Integer;
+  sMailContent: string;
+begin
+  nMailId := QuestActionInfo.nParam1;
+  
+  if nMailId > 0 then begin
+    sMailContent := PlayObject.ReadMailFromDatabase(nMailId);
+    if sMailContent <> '' then begin
+      PlayObject.SysMsg('邮件内容: ' + sMailContent, c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('邮件不存在或已删除', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_READMAILDB);
+  end;
+end;
+
+// 2012年新增功能 - 从数据库删除邮件
+procedure TNormNpc.ActionOfDeleteMailDB(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nMailId: Integer;
+begin
+  nMailId := QuestActionInfo.nParam1;
+  
+  if nMailId > 0 then begin
+    if PlayObject.DeleteMailFromDatabase(nMailId) then begin
+      PlayObject.SysMsg('邮件已从数据库删除', c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('邮件删除失败', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_DELETEMAILDB);
+  end;
+end;
+
+// 2012年新增功能 - 从数据库获取邮件列表
+procedure TNormNpc.ActionOfGetMailListDB(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nPage: Integer;
+  nPageSize: Integer;
+  sMailList: string;
+begin
+  nPage := QuestActionInfo.nParam1;
+  nPageSize := QuestActionInfo.nParam2;
+  
+  if nPage <= 0 then nPage := 1;
+  if nPageSize <= 0 then nPageSize := 10;
+  
+  sMailList := PlayObject.GetMailListFromDatabase(nPage, nPageSize);
+  if sMailList <> '' then begin
+    PlayObject.SysMsg('邮件列表: ' + sMailList, c_Green, t_Hint);
+  end else begin
+    PlayObject.SysMsg('没有邮件', c_Red, t_Hint);
+  end;
+end;
+
+// 2012年新增功能 - 获取邮件数量
+procedure TNormNpc.ActionOfMailCount(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nTotalCount: Integer;
+  nUnreadCount: Integer;
+begin
+  nTotalCount := PlayObject.GetTotalMailCount;
+  nUnreadCount := PlayObject.GetUnreadMailCount;
+  
+  PlayObject.SysMsg('总邮件数: ' + IntToStr(nTotalCount) + ', 未读邮件数: ' + IntToStr(nUnreadCount), c_Green, t_Hint);
+end;
+
+// 2012年新增功能 - 计算离线挂机收益
+procedure TNormNpc.ActionOfCalcOfflineReward(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nOfflineTime: Integer;
+  nExpReward: Integer;
+  nGoldReward: Integer;
+  nItemReward: string;
+begin
+  nOfflineTime := QuestActionInfo.nParam1;
+  
+  if nOfflineTime > 0 then begin
+    PlayObject.CalculateOfflineReward(nOfflineTime, nExpReward, nGoldReward, nItemReward);
+    PlayObject.SysMsg('离线挂机收益计算完成', c_Green, t_Hint);
+    PlayObject.SysMsg('经验: ' + IntToStr(nExpReward) + ', 金币: ' + IntToStr(nGoldReward), c_Green, t_Hint);
+    if nItemReward <> '' then begin
+      PlayObject.SysMsg('物品: ' + nItemReward, c_Green, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_CALCOFFLINEREWARD);
+  end;
+end;
+
+// 2012年新增功能 - 领取离线挂机收益
+procedure TNormNpc.ActionOfClaimOfflineReward(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  bSuccess: Boolean;
+begin
+  bSuccess := PlayObject.ClaimOfflineReward;
+  if bSuccess then begin
+    PlayObject.SysMsg('离线挂机收益领取成功', c_Green, t_Hint);
+  end else begin
+    PlayObject.SysMsg('离线挂机收益领取失败', c_Red, t_Hint);
+  end;
+end;
+
+// 2012年新增功能 - 获取离线挂机收益信息
+procedure TNormNpc.ActionOfGetOfflineReward(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nOfflineTime: Integer;
+  nExpReward: Integer;
+  nGoldReward: Integer;
+  nItemReward: string;
+begin
+  PlayObject.GetOfflineRewardInfo(nOfflineTime, nExpReward, nGoldReward, nItemReward);
+  PlayObject.SysMsg('离线挂机时间: ' + IntToStr(nOfflineTime) + ' 分钟', c_Green, t_Hint);
+  PlayObject.SysMsg('可领取经验: ' + IntToStr(nExpReward) + ', 金币: ' + IntToStr(nGoldReward), c_Green, t_Hint);
+  if nItemReward <> '' then begin
+    PlayObject.SysMsg('可领取物品: ' + nItemReward, c_Green, t_Hint);
+  end;
+end;
+
+// 2012年新增功能 - 设置离线挂机倍率
+procedure TNormNpc.ActionOfSetOfflineRate(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nExpRate: Integer;
+  nGoldRate: Integer;
+  nItemRate: Integer;
+begin
+  nExpRate := QuestActionInfo.nParam1;
+  nGoldRate := QuestActionInfo.nParam2;
+  nItemRate := QuestActionInfo.nParam3;
+  
+  if (nExpRate >= 0) and (nGoldRate >= 0) and (nItemRate >= 0) then begin
+    PlayObject.SetOfflineRewardRate(nExpRate, nGoldRate, nItemRate);
+    PlayObject.SysMsg('离线挂机倍率设置成功', c_Green, t_Hint);
+    PlayObject.SysMsg('经验倍率: ' + IntToStr(nExpRate) + '%, 金币倍率: ' + IntToStr(nGoldRate) + '%, 物品倍率: ' + IntToStr(nItemRate) + '%', c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETOFFLINERATE);
+  end;
+end;
+
+// 2012年新增功能 - 显示装备特效
+procedure TNormNpc.ActionOfShowEquipEffect(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nEquipSlot: Integer;
+  nEffectType: Integer;
+begin
+  nEquipSlot := QuestActionInfo.nParam1;
+  nEffectType := QuestActionInfo.nParam2;
+  
+  if (nEquipSlot >= 0) and (nEquipSlot <= 15) then begin
+    if nEffectType < 0 then nEffectType := 0;
+    PlayObject.ShowEquipEffect(nEquipSlot, nEffectType);
+    PlayObject.SysMsg('装备特效已显示，位置: ' + IntToStr(nEquipSlot) + ', 类型: ' + IntToStr(nEffectType), c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SHOWEQUIPEFFECT);
+  end;
+end;
+
+// 2012年新增功能 - 隐藏装备特效
+procedure TNormNpc.ActionOfHideEquipEffect(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nEquipSlot: Integer;
+begin
+  nEquipSlot := QuestActionInfo.nParam1;
+  
+  if (nEquipSlot >= 0) and (nEquipSlot <= 15) then begin
+    PlayObject.HideEquipEffect(nEquipSlot);
+    PlayObject.SysMsg('装备特效已隐藏，位置: ' + IntToStr(nEquipSlot), c_Green, t_Hint);
+  end else begin
+    // 隐藏所有装备特效
+    PlayObject.HideAllEquipEffects;
+    PlayObject.SysMsg('所有装备特效已隐藏', c_Green, t_Hint);
+  end;
+end;
+
+// 2012年新增功能 - 设置装备特效
+procedure TNormNpc.ActionOfSetEquipEffect(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nEquipSlot: Integer;
+  nEffectType: Integer;
+  nEffectLevel: Integer;
+  nEffectColor: Integer;
+begin
+  nEquipSlot := QuestActionInfo.nParam1;
+  nEffectType := QuestActionInfo.nParam2;
+  nEffectLevel := QuestActionInfo.nParam3;
+  nEffectColor := QuestActionInfo.nParam4;
+  
+  if (nEquipSlot >= 0) and (nEquipSlot <= 15) and (nEffectType >= 0) and (nEffectLevel >= 0) then begin
+    if nEffectColor < 0 then nEffectColor := 0;
+    PlayObject.SetEquipEffect(nEquipSlot, nEffectType, nEffectLevel, nEffectColor);
+    PlayObject.SysMsg('装备特效已设置，位置: ' + IntToStr(nEquipSlot) + ', 类型: ' + IntToStr(nEffectType) + ', 等级: ' + IntToStr(nEffectLevel), c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETEQUIPEFFECT);
+  end;
+end;
+
+// 2012年新增功能 - 获取装备特效
+procedure TNormNpc.ActionOfGetEquipEffect(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nEquipSlot: Integer;
+  nEffectType: Integer;
+  nEffectLevel: Integer;
+  nEffectColor: Integer;
+begin
+  nEquipSlot := QuestActionInfo.nParam1;
+  
+  if (nEquipSlot >= 0) and (nEquipSlot <= 15) then begin
+    PlayObject.GetEquipEffect(nEquipSlot, nEffectType, nEffectLevel, nEffectColor);
+    PlayObject.SysMsg('装备特效信息，位置: ' + IntToStr(nEquipSlot), c_Green, t_Hint);
+    PlayObject.SysMsg('类型: ' + IntToStr(nEffectType) + ', 等级: ' + IntToStr(nEffectLevel) + ', 颜色: ' + IntToStr(nEffectColor), c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_GETEQUIPEFFECT);
+  end;
+end;
+
+// 2012年新增功能 - 播放装备特效
+procedure TNormNpc.ActionOfPlayEquipEffect(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nEquipSlot: Integer;
+  nEffectType: Integer;
+  nDuration: Integer;
+begin
+  nEquipSlot := QuestActionInfo.nParam1;
+  nEffectType := QuestActionInfo.nParam2;
+  nDuration := QuestActionInfo.nParam3;
+  
+  if (nEquipSlot >= 0) and (nEquipSlot <= 15) and (nEffectType >= 0) then begin
+    if nDuration <= 0 then nDuration := 3000; // 默认3秒
+    PlayObject.PlayEquipEffect(nEquipSlot, nEffectType, nDuration);
+    PlayObject.SysMsg('装备特效播放中，位置: ' + IntToStr(nEquipSlot) + ', 类型: ' + IntToStr(nEffectType) + ', 持续时间: ' + IntToStr(nDuration) + 'ms', c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_PLAYEQUIPEFFECT);
+  end;
+end;
+
+// 2012年新增功能 - 执行脚本
+procedure TNormNpc.ActionOfExecuteScript(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sScriptName: string;
+  sScriptCode: string;
+  bSuccess: Boolean;
+begin
+  sScriptName := QuestActionInfo.sParam1;
+  sScriptCode := QuestActionInfo.sParam2;
+  
+  if (sScriptName <> '') and (sScriptCode <> '') then begin
+    bSuccess := PlayObject.ExecuteScript(sScriptName, sScriptCode);
+    if bSuccess then begin
+      PlayObject.SysMsg('脚本执行成功: ' + sScriptName, c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('脚本执行失败: ' + sScriptName, c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_EXECUTESCRIPT);
+  end;
+end;
+
+// 2012年新增功能 - 加载脚本
+procedure TNormNpc.ActionOfLoadScript(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sScriptFile: string;
+  bSuccess: Boolean;
+begin
+  sScriptFile := QuestActionInfo.sParam1;
+  
+  if sScriptFile <> '' then begin
+    bSuccess := PlayObject.LoadScript(sScriptFile);
+    if bSuccess then begin
+      PlayObject.SysMsg('脚本加载成功: ' + sScriptFile, c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('脚本加载失败: ' + sScriptFile, c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_LOADSCRIPT);
+  end;
+end;
+
+// 2012年新增功能 - 卸载脚本
+procedure TNormNpc.ActionOfUnloadScript(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sScriptName: string;
+  bSuccess: Boolean;
+begin
+  sScriptName := QuestActionInfo.sParam1;
+  
+  if sScriptName <> '' then begin
+    bSuccess := PlayObject.UnloadScript(sScriptName);
+    if bSuccess then begin
+      PlayObject.SysMsg('脚本卸载成功: ' + sScriptName, c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('脚本卸载失败: ' + sScriptName, c_Red, t_Hint);
+    end;
+  end else begin
+    // 卸载所有脚本
+    PlayObject.UnloadAllScripts;
+    PlayObject.SysMsg('所有脚本已卸载', c_Green, t_Hint);
+  end;
+end;
+
+// 2012年新增功能 - 获取脚本变量
+procedure TNormNpc.ActionOfGetScriptVar(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sVarName: string;
+  sVarValue: string;
+begin
+  sVarName := QuestActionInfo.sParam1;
+  
+  if sVarName <> '' then begin
+    sVarValue := PlayObject.GetScriptVariable(sVarName);
+    PlayObject.SysMsg('脚本变量 ' + sVarName + ' = ' + sVarValue, c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_GETSCRIPTVAR);
+  end;
+end;
+
+// 2012年新增功能 - 设置脚本变量
+procedure TNormNpc.ActionOfSetScriptVar(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sVarName: string;
+  sVarValue: string;
+  bSuccess: Boolean;
+begin
+  sVarName := QuestActionInfo.sParam1;
+  sVarValue := QuestActionInfo.sParam2;
+  
+  if (sVarName <> '') and (sVarValue <> '') then begin
+    bSuccess := PlayObject.SetScriptVariable(sVarName, sVarValue);
+    if bSuccess then begin
+      PlayObject.SysMsg('脚本变量设置成功: ' + sVarName + ' = ' + sVarValue, c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('脚本变量设置失败: ' + sVarName, c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETSCRIPTVAR);
+  end;
+end;
+
+// 2012年新增功能 - 加载插件
+procedure TNormNpc.ActionOfLoadPlugin(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sPluginFile: string;
+  sPluginName: string;
+  bSuccess: Boolean;
+begin
+  sPluginFile := QuestActionInfo.sParam1;
+  sPluginName := QuestActionInfo.sParam2;
+  
+  if (sPluginFile <> '') and (sPluginName <> '') then begin
+    bSuccess := PlayObject.LoadPlugin(sPluginFile, sPluginName);
+    if bSuccess then begin
+      PlayObject.SysMsg('插件加载成功: ' + sPluginName, c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('插件加载失败: ' + sPluginName, c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_LOADPLUGIN);
+  end;
+end;
+
+// 2012年新增功能 - 卸载插件
+procedure TNormNpc.ActionOfUnloadPlugin(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sPluginName: string;
+  bSuccess: Boolean;
+begin
+  sPluginName := QuestActionInfo.sParam1;
+  
+  if sPluginName <> '' then begin
+    bSuccess := PlayObject.UnloadPlugin(sPluginName);
+    if bSuccess then begin
+      PlayObject.SysMsg('插件卸载成功: ' + sPluginName, c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('插件卸载失败: ' + sPluginName, c_Red, t_Hint);
+    end;
+  end else begin
+    // 卸载所有插件
+    PlayObject.UnloadAllPlugins;
+    PlayObject.SysMsg('所有插件已卸载', c_Green, t_Hint);
+  end;
+end;
+
+// 2012年新增功能 - 获取插件状态
+procedure TNormNpc.ActionOfGetPluginStatus(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sPluginName: string;
+  nStatus: Integer;
+  sStatusText: string;
+begin
+  sPluginName := QuestActionInfo.sParam1;
+  
+  if sPluginName <> '' then begin
+    nStatus := PlayObject.GetPluginStatus(sPluginName);
+    case nStatus of
+      0: sStatusText := '未加载';
+      1: sStatusText := '已加载';
+      2: sStatusText := '运行中';
+      3: sStatusText := '已暂停';
+      4: sStatusText := '已停止';
+    else
+      sStatusText := '未知状态';
+    end;
+    PlayObject.SysMsg('插件状态: ' + sPluginName + ' - ' + sStatusText, c_Green, t_Hint);
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_GETPLUGINSTATUS);
+  end;
+end;
+
+// 2012年新增功能 - 执行插件
+procedure TNormNpc.ActionOfExecutePlugin(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sPluginName: string;
+  sFunctionName: string;
+  sParameters: string;
+  bSuccess: Boolean;
+begin
+  sPluginName := QuestActionInfo.sParam1;
+  sFunctionName := QuestActionInfo.sParam2;
+  sParameters := QuestActionInfo.sParam3;
+  
+  if (sPluginName <> '') and (sFunctionName <> '') then begin
+    bSuccess := PlayObject.ExecutePlugin(sPluginName, sFunctionName, sParameters);
+    if bSuccess then begin
+      PlayObject.SysMsg('插件执行成功: ' + sPluginName + '.' + sFunctionName, c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('插件执行失败: ' + sPluginName + '.' + sFunctionName, c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_EXECUTEPLUGIN);
+  end;
+end;
+
+// 2012年新增功能 - 获取插件列表
+procedure TNormNpc.ActionOfGetPluginList(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  sPluginList: string;
+begin
+  sPluginList := PlayObject.GetPluginList;
+  if sPluginList <> '' then begin
+    PlayObject.SysMsg('已加载插件列表:', c_Green, t_Hint);
+    PlayObject.SysMsg(sPluginList, c_Green, t_Hint);
+  end else begin
+    PlayObject.SysMsg('当前没有加载的插件', c_Yellow, t_Hint);
+  end;
+end;
+
+// 2012年新增功能 - 设置AI
+procedure TNormNpc.ActionOfSetAI(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nAIType: Integer;
+  nAILevel: Integer;
+  sAIParams: string;
+  bSuccess: Boolean;
+begin
+  nAIType := QuestActionInfo.nParam1;
+  nAILevel := QuestActionInfo.nParam2;
+  sAIParams := QuestActionInfo.sParam1;
+  
+  if (nAIType >= 0) and (nAILevel >= 0) then begin
+    bSuccess := PlayObject.SetAI(nAIType, nAILevel, sAIParams);
+    if bSuccess then begin
+      PlayObject.SysMsg('AI设置成功，类型: ' + IntToStr(nAIType) + ', 等级: ' + IntToStr(nAILevel), c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('AI设置失败', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETAI);
+  end;
+end;
+
+// 2012年新增功能 - 获取AI
+procedure TNormNpc.ActionOfGetAI(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nAIType: Integer;
+  nAILevel: Integer;
+  sAIParams: string;
+begin
+  PlayObject.GetAI(nAIType, nAILevel, sAIParams);
+  PlayObject.SysMsg('AI信息 - 类型: ' + IntToStr(nAIType) + ', 等级: ' + IntToStr(nAILevel), c_Green, t_Hint);
+  if sAIParams <> '' then begin
+    PlayObject.SysMsg('AI参数: ' + sAIParams, c_Green, t_Hint);
+  end;
+end;
+
+// 2012年新增功能 - AI动作
+procedure TNormNpc.ActionOfAIAction(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nActionType: Integer;
+  sActionParams: string;
+  bSuccess: Boolean;
+begin
+  nActionType := QuestActionInfo.nParam1;
+  sActionParams := QuestActionInfo.sParam1;
+  
+  if nActionType >= 0 then begin
+    bSuccess := PlayObject.ExecuteAIAction(nActionType, sActionParams);
+    if bSuccess then begin
+      PlayObject.SysMsg('AI动作执行成功，类型: ' + IntToStr(nActionType), c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('AI动作执行失败', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_AIACTION);
+  end;
+end;
+
+// 2012年新增功能 - AI状态
+procedure TNormNpc.ActionOfAIState(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nStateType: Integer;
+  nStateValue: Integer;
+  sStateInfo: string;
+begin
+  nStateType := QuestActionInfo.nParam1;
+  
+  if nStateType >= 0 then begin
+    PlayObject.GetAIState(nStateType, nStateValue, sStateInfo);
+    PlayObject.SysMsg('AI状态 - 类型: ' + IntToStr(nStateType) + ', 值: ' + IntToStr(nStateValue), c_Green, t_Hint);
+    if sStateInfo <> '' then begin
+      PlayObject.SysMsg('状态信息: ' + sStateInfo, c_Green, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_AISTATE);
+  end;
+end;
+
+// 2012年新增功能 - AI训练
+procedure TNormNpc.ActionOfAITrain(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+var
+  nTrainType: Integer;
+  nTrainData: Integer;
+  sTrainParams: string;
+  bSuccess: Boolean;
+begin
+  nTrainType := QuestActionInfo.nParam1;
+  nTrainData := QuestActionInfo.nParam2;
+  sTrainParams := QuestActionInfo.sParam1;
+  
+  if (nTrainType >= 0) and (nTrainData > 0) then begin
+    bSuccess := PlayObject.TrainAI(nTrainType, nTrainData, sTrainParams);
+    if bSuccess then begin
+      PlayObject.SysMsg('AI训练成功，类型: ' + IntToStr(nTrainType) + ', 数据量: ' + IntToStr(nTrainData), c_Green, t_Hint);
+    end else begin
+      PlayObject.SysMsg('AI训练失败', c_Red, t_Hint);
+    end;
+  end else begin
+    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_AITRAIN);
+  end;
+end;
+
 procedure TNormNpc.ActionOfRepairItem(PlayObject: TPlayObject; QuestActionInfo:
   pTQuestActionInfo);
 var
@@ -9009,6 +11043,11 @@ begin
   FNpcCondition[nSC_CHECKPOSEISMASTER] := ConditionOfCheckPoseIsMaster;
   FNpcCondition[nSC_CHECKNAMEIPLIST] := ConditionOfCheckNameIPList;
   FNpcCondition[nSC_CHECKACCOUNTIPLIST] := ConditionOfCheckAccountIPList;
+  
+  // 2012年新增功能 - 检测命令扩展
+  FNpcCondition[nSC_CHECKITEMQUALITY] := ConditionOfCheckItemQuality;
+  FNpcCondition[nSC_CHECKITEMEFFECT] := ConditionOfCheckItemEffect;
+  FNpcCondition[nSC_CHECKOFFLINETIME] := ConditionOfCheckOfflineTime;
   FNpcCondition[nSC_CHECKSLAVECOUNT] := ConditionOfCheckSlaveCount;
   FNpcCondition[nSC_ISNEWHUMAN] := ConditionOfISNewHuman;
   FNpcCondition[nSC_CHECKMEMBERTYPE] := ConditionOfCheckMemberType;
@@ -9280,6 +11319,149 @@ begin
   FNpcAction[nSC_SETHUMICON] := ActionOfSetHumIcon;
   FNpcAction[nSC_CLEARSENDCENTERMSG] := ActionOfClearSendCenterMsg;
   FNpcAction[nSC_TAKEOFFITEM] := ActionOfTakeOffItem;
+  
+  // 2011年新增功能注册
+  FNpcAction[nSC_SETONTIMER] := ActionOfSetOnTimer;
+  FNpcAction[nSC_SETOFFTIMER] := ActionOfSetOffTimer;
+  FNpcAction[nSC_GOHOME] := ActionOfGoHome;
+  FNpcAction[nSC_THROWITEM] := ActionOfThrowItem;
+  FNpcAction[nSC_CHECKTEAMCOUNT] := ActionOfCheckTeamCount;
+  FNpcAction[nSC_CHECKTIMEOFSYSTEM] := ActionOfCheckTimeOfSystem;
+  FNpcAction[nSC_ADDEXPRATEMULTIPLE] := ActionOfAddExpRateMultiple;
+  FNpcAction[nSC_KILLMONEXPMULTIPLE] := ActionOfKillMonExpMultiple;
+  
+  // 2012年新增功能注册
+  FNpcAction[nSC_CHECKITEMSTRENGTHEN] := ActionOfCheckItemStrengthen;
+  FNpcAction[nSC_STRENGTHENITEM] := ActionOfStrengthenItem;
+  FNpcAction[nSC_CHECKITEMCOMPOUND] := ActionOfCheckItemCompound;
+  FNpcAction[nSC_COMPOUNDITEM] := ActionOfCompoundItem;
+  FNpcAction[nSC_CHECKSUITCOUNT] := ActionOfCheckSuitCount;
+  FNpcAction[nSC_ACTIVATESUIT] := ActionOfActivateSuit;
+  FNpcAction[nSC_CHECKITEMENLIGHTEN] := ActionOfCheckItemEnlighten;
+  FNpcAction[nSC_ENLIGHTENITEM] := ActionOfEnlightenItem;
+  
+  // 2012年新增功能 - 基础脚本命令扩展
+  FNpcAction[nSC_REFRESHVALUE] := ActionOfRefreshValue;
+  FNpcAction[nSC_HOOKITEMIDX] := ActionOfHookItemIdx;
+  FNpcAction[nSC_KILLMONEXPMULTIPLE] := ActionOfKillMonExpMultiple;
+  FNpcAction[nSC_OPENUPGRADEDIALOG] := ActionOfOpenUpgradeDialog;
+  FNpcAction[nSC_CREATEFILE] := ActionOfCreateFile;
+  FNpcAction[nSC_TAKEIDX] := ActionOfTakeIdx;
+  
+  // 2012年新增功能 - 装备品质和特效系统
+  FNpcAction[nSC_SETITEMQUALITY] := ActionOfSetItemQuality;
+  FNpcAction[nSC_GETITEMQUALITY] := ActionOfGetItemQuality;
+  FNpcAction[nSC_SETITEMEFFECT] := ActionOfSetItemEffect;
+  FNpcAction[nSC_GETITEMEFFECT] := ActionOfGetItemEffect;
+  
+  // 2012年新增功能 - 邮件系统
+  FNpcAction[nSC_SENDMAIL] := ActionOfSendMail;
+  FNpcAction[nSC_READMAIL] := ActionOfReadMail;
+  FNpcAction[nSC_DELETEMAIL] := ActionOfDeleteMail;
+  FNpcAction[nSC_GETMAILLIST] := ActionOfGetMailList;
+  
+  // 2012年新增功能 - 离线挂机系统
+  FNpcAction[nSC_STARTOFFLINE] := ActionOfStartOffline;
+  FNpcAction[nSC_STOPOFFLINE] := ActionOfStopOffline;
+  FNpcAction[nSC_CHECKOFFLINE] := ActionOfCheckOffline;
+  
+  // 2012年新增功能 - 新怪物攻击模式
+  FNpcAction[nSC_SETMONSTERATTACKMODE] := ActionOfSetMonsterAttackMode;
+  FNpcAction[nSC_GETMONSTERATTACKMODE] := ActionOfGetMonsterAttackMode;
+  FNpcAction[nSC_SETMONSTERATTACKRANGE] := ActionOfSetMonsterAttackRange;
+  FNpcAction[nSC_GETMONSTERATTACKRANGE] := ActionOfGetMonsterAttackRange;
+  
+  // 2012年新增功能 - 坐骑系统升级
+  FNpcAction[nSC_UPGRADEHORSE] := ActionOfUpgradeHorse;
+  FNpcAction[nSC_GETHORSELEVEL] := ActionOfGetHorseLevel;
+  FNpcAction[nSC_SETHORSESKILL] := ActionOfSetHorseSkill;
+  FNpcAction[nSC_GETHORSESKILL] := ActionOfGetHorseSkill;
+  
+  // 2012年新增功能 - 商城系统扩展
+  FNpcAction[nSC_OPENSKINDIALOG] := ActionOfOpenSkinDialog;
+  FNpcAction[nSC_OPENTOPUPDIALOG] := ActionOfOpenTopupDialog;
+  FNpcAction[nSC_OPENVIPDIALOG] := ActionOfOpenVipDialog;
+  FNpcAction[nSC_OPENRECHARGEDIALOG] := ActionOfOpenRechargeDialog;
+  
+  // 2012年新增功能 - 技能系统扩展
+  FNpcAction[nSC_ADDSKILLEXP] := ActionOfAddSkillExp;
+  FNpcAction[nSC_SETSKILLEXP] := ActionOfSetSkillExp;
+  FNpcAction[nSC_GETSKILLEXP] := ActionOfGetSkillExp;
+  FNpcAction[nSC_RESETSKILL] := ActionOfResetSkill;
+  FNpcAction[nSC_LEARNALLSKILLS] := ActionOfLearnAllSkills;
+  
+  // 2012年新增功能 - 高级脚本命令扩展
+  FNpcAction[nSC_SETPLAYERFLAG] := ActionOfSetPlayerFlag;
+  FNpcAction[nSC_GETPLAYERFLAG] := ActionOfGetPlayerFlag;
+  FNpcAction[nSC_SETPLAYERDATA] := ActionOfSetPlayerData;
+  FNpcAction[nSC_GETPLAYERDATA] := ActionOfGetPlayerData;
+  FNpcAction[nSC_EXECUTEFUNCTION] := ActionOfExecuteFunction;
+  
+  // 2012年新增功能 - 性能优化缓存系统
+  FNpcAction[nSC_SETCACHE] := ActionOfSetCache;
+  FNpcAction[nSC_GETCACHE] := ActionOfGetCache;
+  FNpcAction[nSC_CLEARCACHE] := ActionOfClearCache;
+  FNpcAction[nSC_CACHEEXISTS] := ActionOfCacheExists;
+  
+  // 2012年新增功能 - 安全性增强日志系统
+  FNpcAction[nSC_WRITELOG] := ActionOfWriteLog;
+  FNpcAction[nSC_READLOG] := ActionOfReadLog;
+  FNpcAction[nSC_CLEARLOG] := ActionOfClearLog;
+  FNpcAction[nSC_LOGEXISTS] := ActionOfLogExists;
+  
+  // 2012年新增功能 - 完整邮件系统数据库集成
+  FNpcAction[nSC_SENDMAILDB] := ActionOfSendMailDB;
+  FNpcAction[nSC_READMAILDB] := ActionOfReadMailDB;
+  FNpcAction[nSC_DELETEMAILDB] := ActionOfDeleteMailDB;
+  FNpcAction[nSC_GETMAILLISTDB] := ActionOfGetMailListDB;
+  FNpcAction[nSC_MAILCOUNT] := ActionOfMailCount;
+  
+  // 2012年新增功能 - 离线挂机收益计算
+  FNpcAction[nSC_CALCOFFLINEREWARD] := ActionOfCalcOfflineReward;
+  FNpcAction[nSC_CLAIMOFFLINEREWARD] := ActionOfClaimOfflineReward;
+  FNpcAction[nSC_GETOFFLINEREWARD] := ActionOfGetOfflineReward;
+  FNpcAction[nSC_SETOFFLINERATE] := ActionOfSetOfflineRate;
+  
+  // 2012年新增功能 - 装备品质特效的客户端显示装备特效系统
+  FNpcAction[nSC_SHOWEQUIPEFFECT] := ActionOfShowEquipEffect;
+  FNpcAction[nSC_HIDEEQUIPEFFECT] := ActionOfHideEquipEffect;
+  FNpcAction[nSC_SETEQUIPEFFECT] := ActionOfSetEquipEffect;
+  FNpcAction[nSC_GETEQUIPEFFECT] := ActionOfGetEquipEffect;
+  FNpcAction[nSC_PLAYEQUIPEFFECT] := ActionOfPlayEquipEffect;
+  
+  // 2012年新增功能 - 高级脚本命令扩展高级脚本系统
+  FNpcAction[nSC_EXECUTESCRIPT] := ActionOfExecuteScript;
+  FNpcAction[nSC_LOADSCRIPT] := ActionOfLoadScript;
+  FNpcAction[nSC_UNLOADSCRIPT] := ActionOfUnloadScript;
+  FNpcAction[nSC_GETSCRIPTVAR] := ActionOfGetScriptVar;
+  FNpcAction[nSC_SETSCRIPTVAR] := ActionOfSetScriptVar;
+  
+  // 2012年新增功能 - 插件系统开发插件管理系统
+  FNpcAction[nSC_LOADPLUGIN] := ActionOfLoadPlugin;
+  FNpcAction[nSC_UNLOADPLUGIN] := ActionOfUnloadPlugin;
+  FNpcAction[nSC_GETPLUGINSTATUS] := ActionOfGetPluginStatus;
+  FNpcAction[nSC_EXECUTEPLUGIN] := ActionOfExecutePlugin;
+  FNpcAction[nSC_GETPLUGINLIST] := ActionOfGetPluginList;
+  
+  // 2012年新增功能 - AI系统集成AI管理系统
+  FNpcAction[nSC_SETAI] := ActionOfSetAI;
+  FNpcAction[nSC_GETAI] := ActionOfGetAI;
+  FNpcAction[nSC_AIACTION] := ActionOfAIAction;
+  FNpcAction[nSC_AISTATE] := ActionOfAIState;
+  FNpcAction[nSC_AITRAIN] := ActionOfAITrain;
+  
+  // 2012年新增功能 - 客户端界面优化界面管理系统
+  FNpcAction[nSC_SHOWUI] := ActionOfShowUI;
+  FNpcAction[nSC_HIDEUI] := ActionOfHideUI;
+  FNpcAction[nSC_SETUIPOS] := ActionOfSetUIPos;
+  FNpcAction[nSC_SETUISIZE] := ActionOfSetUISize;
+  FNpcAction[nSC_REFRESHUI] := ActionOfRefreshUI;
+  
+  // 2012年新增功能 - 网络通信优化网络管理系统
+  FNpcAction[nSC_SETNETWORKMODE] := ActionOfSetNetworkMode;
+  FNpcAction[nSC_GETNETWORKSTATUS] := ActionOfGetNetworkStatus;
+  FNpcAction[nSC_OPTIMIZENETWORK] := ActionOfOptimizeNetwork;
+  FNpcAction[nSC_SETNETWORKTIMEOUT] := ActionOfSetNetworkTimeout;
 end;
 
 destructor TNormNpc.Destroy; //0049AAE4
@@ -9700,6 +11882,112 @@ begin
             end;
           end;
         end;
+        sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
+      end;
+    // 2011年新增功能 - 队伍成员常量处理
+    nVAR_TEAM0: begin
+        sText := '????';
+        if PlayObject.m_GroupOwner <> nil then begin
+          sText := TPlayObject(PlayObject.m_GroupOwner).m_sCharName; // 队长名称
+        end;
+        sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
+      end;
+    nVAR_TEAM1: begin
+        sText := '????';
+        if (PlayObject.m_GroupOwner <> nil) and (TPlayObject(PlayObject.m_GroupOwner).m_GroupMembers.Count > 0) then begin
+          sText := TPlayObject(PlayObject.m_GroupOwner).m_GroupMembers[0];
+        end;
+        sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
+      end;
+    nVAR_TEAM2: begin
+        sText := '????';
+        if (PlayObject.m_GroupOwner <> nil) and (TPlayObject(PlayObject.m_GroupOwner).m_GroupMembers.Count > 1) then begin
+          sText := TPlayObject(PlayObject.m_GroupOwner).m_GroupMembers[1];
+        end;
+        sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
+      end;
+    nVAR_TEAM3: begin
+        sText := '????';
+        if (PlayObject.m_GroupOwner <> nil) and (TPlayObject(PlayObject.m_GroupOwner).m_GroupMembers.Count > 2) then begin
+          sText := TPlayObject(PlayObject.m_GroupOwner).m_GroupMembers[2];
+        end;
+        sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
+      end;
+    nVAR_TEAM4: begin
+        sText := '????';
+        if (PlayObject.m_GroupOwner <> nil) and (TPlayObject(PlayObject.m_GroupOwner).m_GroupMembers.Count > 3) then begin
+          sText := TPlayObject(PlayObject.m_GroupOwner).m_GroupMembers[3];
+        end;
+        sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
+      end;
+    nVAR_TEAM5: begin
+        sText := '????';
+        if (PlayObject.m_GroupOwner <> nil) and (TPlayObject(PlayObject.m_GroupOwner).m_GroupMembers.Count > 4) then begin
+          sText := TPlayObject(PlayObject.m_GroupOwner).m_GroupMembers[4];
+        end;
+        sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
+      end;
+    nVAR_TEAM6: begin
+        sText := '????';
+        if (PlayObject.m_GroupOwner <> nil) and (TPlayObject(PlayObject.m_GroupOwner).m_GroupMembers.Count > 5) then begin
+          sText := TPlayObject(PlayObject.m_GroupOwner).m_GroupMembers[5];
+        end;
+        sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
+      end;
+    nVAR_TEAM7: begin
+        sText := '????';
+        if (PlayObject.m_GroupOwner <> nil) and (TPlayObject(PlayObject.m_GroupOwner).m_GroupMembers.Count > 6) then begin
+          sText := TPlayObject(PlayObject.m_GroupOwner).m_GroupMembers[6];
+        end;
+        sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
+      end;
+    // 2012年新增功能 - 基础变量系统扩展
+    nVAR_POWERRATE: begin
+        sText := IntToStr(PlayObject.m_nPowerRate);
+        sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
+      end;
+    nVAR_POWERRATETIME: begin
+        if PlayObject.m_dwPowerRateTime > 0 then begin
+          sText := IntToStr((PlayObject.m_dwPowerRateTime - GetTickCount) div 1000);
+        end else begin
+          sText := '0';
+        end;
+        sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
+      end;
+    nVAR_EXPRATE: begin
+        sText := IntToStr(PlayObject.m_nExpRate);
+        sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
+      end;
+    nVAR_EXPRATETIME: begin
+        if PlayObject.m_dwExpRateTime > 0 then begin
+          sText := IntToStr((PlayObject.m_dwExpRateTime - GetTickCount) div 1000);
+        end else begin
+          sText := '0';
+        end;
+        sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
+      end;
+    nVAR_GUILDLEVEL: begin
+        if PlayObject.m_MyGuild <> nil then begin
+          sText := IntToStr(TGuild(PlayObject.m_MyGuild).btLevel);
+        end else begin
+          sText := '0';
+        end;
+        sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
+      end;
+    nVAR_RENEWLEVEL: begin
+        sText := IntToStr(PlayObject.m_btReLevel);
+        sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
+      end;
+    nVAR_GROUPCOUNT: begin
+        if PlayObject.m_GroupOwner <> nil then begin
+          sText := IntToStr(TPlayObject(PlayObject.m_GroupOwner).m_GroupMembers.Count + 1);
+        end else begin
+          sText := '0';
+        end;
+        sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
+      end;
+    nVAR_USERINTERFACE: begin
+        sText := IntToStr(PlayObject.m_btInterface); // 0=剑侠界面 1=盛大界面
         sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
       end;
     nVAR_UNMASTER_FORCE: begin

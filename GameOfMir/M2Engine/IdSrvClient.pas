@@ -330,6 +330,7 @@ resourcestring
 begin
   Config := @g_Config;
   SendDelaySocket;
+  // 优化临界区使用，减少锁的持有时间
   EnterCriticalSection(Config.UserIDSection);
   try
     if Config.sIDSocketRecvText <> '' then begin
@@ -340,6 +341,7 @@ begin
   finally
     LeaveCriticalSection(Config.UserIDSection);
   end;
+  
   try
     while (True) do begin
       sSocketText := ArrestStringEx(sSocketText, '(', ')', sData);
@@ -359,11 +361,15 @@ begin
       if Pos(')', sSocketText) <= 0 then
         break;
     end;
-    EnterCriticalSection(Config.UserIDSection);
-    try
-      Config.sIDSocketRecvText := sSocketText + Config.sIDSocketRecvText;
-    finally
-      LeaveCriticalSection(Config.UserIDSection);
+    
+    // 只在需要更新共享数据时进入临界区
+    if sSocketText <> '' then begin
+      EnterCriticalSection(Config.UserIDSection);
+      try
+        Config.sIDSocketRecvText := sSocketText + Config.sIDSocketRecvText;
+      finally
+        LeaveCriticalSection(Config.UserIDSection);
+      end;
     end;
   except
     MainOutMessage(sExceptionMsg);

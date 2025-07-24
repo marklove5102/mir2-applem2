@@ -202,8 +202,15 @@ end;
 
 finalization
 begin
-	//FreeMem (EncBuf, BUFFERSIZE + 100);
-   //FreeMem (TempBuf, 2048);
+	// 启用内存释放，防止内存泄漏
+	if EncBuf <> nil then begin
+		FreeMem (EncBuf, 10240 + 100);
+		EncBuf := nil;
+	end;
+	if TempBuf <> nil then begin
+		FreeMem (TempBuf, 10240);
+		TempBuf := nil;
+	end;
    DeleteCriticalSection (CSEncode);
 end;
 

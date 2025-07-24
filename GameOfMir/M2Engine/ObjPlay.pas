@@ -388,6 +388,81 @@ type
 
     m_IconInfo: TIconInfos;
     m_HookItemEx: TList;
+    
+    // 2011年新增功能相关字段
+    // 个人定时器系统
+    m_dwTimerStart: array[0..9] of LongWord;    // 定时器开始时间
+    m_dwTimerTime: array[0..9] of LongWord;     // 定时器持续时间
+    m_sTimerScript: array[0..9] of string;      // 定时器脚本标签
+    m_boTimerActive: array[0..9] of Boolean;    // 定时器是否激活
+    
+    // 经验倍率系统（扩展现有字段）
+    m_nExpRate: Integer;                        // 额外经验倍率
+    m_dwExpRateTime: LongWord;                  // 经验倍率结束时间
+    
+    // 装备强化属性加成系统
+    m_nStrengthenHP: Integer;                   // 装备强化HP加成
+    m_nStrengthenMP: Integer;                   // 装备强化MP加成
+    m_nStrengthenAC: Integer;                   // 装备强化防御加成
+    m_nStrengthenMAC: Integer;                  // 装备强化魔御加成
+    m_nStrengthenDC: Integer;                   // 装备强化攻击加成
+    m_nStrengthenMC: Integer;                   // 装备强化魔法加成
+    m_nStrengthenSC: Integer;                   // 装备强化道术加成
+    
+    // 2012年新增功能 - 装备操作相关
+    m_nHookItemIdx: Integer;                    // 锁定的装备ID
+    
+    // 2012年新增功能 - 攻击力倍率系统
+    m_nPowerRate: Integer;                      // 攻击力倍数
+    m_dwPowerRateTime: LongWord;                // 攻击力倍数结束时间
+    
+    // 2012年新增功能 - 离线挂机系统
+    m_boOfflineMode: Boolean;                   // 离线挂机模式
+    m_dwOfflineStartTime: LongWord;             // 离线挂机开始时间
+    m_dwOfflineDuration: LongWord;              // 离线挂机持续时间
+    m_sOfflineMapName: string;                  // 离线挂机地图名称
+    
+    // 2012年新增功能 - 坐骑系统升级
+    m_nHorseLevel: Integer;                     // 坐骑等级
+    m_nHorseSkills: array[0..9] of Integer;     // 坐骑技能等级数组
+    
+    // 2012年新增功能 - 高级脚本命令扩展
+    m_nPlayerFlags: array[0..99] of Integer;    // 玩家标志数组
+    m_sPlayerData: TStringList;                 // 玩家数据存储
+    
+    // 2012年新增功能 - 性能优化缓存系统
+    m_sCacheData: TStringList;                  // 缓存数据存储
+    m_sCacheExpire: TStringList;                // 缓存过期时间
+    
+    // 2012年新增功能 - 安全性增强日志系统
+    m_sLogData: TStringList;                    // 日志数据存储
+    
+    // 2012年新增功能 - 离线挂机收益计算
+    m_nOfflineExpRate: Integer;                 // 离线经验倍率
+    m_nOfflineGoldRate: Integer;                // 离线金币倍率
+    m_nOfflineItemRate: Integer;                // 离线物品倍率
+    m_nOfflineExpReward: Integer;               // 离线经验收益
+    m_nOfflineGoldReward: Integer;              // 离线金币收益
+    m_sOfflineItemReward: string;               // 离线物品收益
+    
+    // 2012年新增功能 - 装备品质特效的客户端显示
+    m_nEquipEffects: array[0..15] of Integer;   // 装备特效数组
+    m_nEquipEffectLevels: array[0..15] of Integer; // 装备特效等级数组
+    m_nEquipEffectColors: array[0..15] of Integer; // 装备特效颜色数组
+    
+    // 2012年新增功能 - 高级脚本命令扩展
+    m_sScriptVariables: TStringList;            // 脚本变量存储
+    m_sLoadedScripts: TStringList;              // 已加载脚本列表
+    
+    // 2012年新增功能 - 插件系统开发
+    m_sLoadedPlugins: TStringList;              // 已加载插件列表
+    m_nPluginStatus: array[0..99] of Integer;   // 插件状态数组
+    
+    // 2012年新增功能 - AI系统集成
+    m_nAIType: Integer;                         // AI类型
+    m_nAILevel: Integer;                        // AI等级
+    m_sAIParams: string;                        // AI参数
+    m_nAIState: array[0..9] of Integer;         // AI状态数组
   private
     FServerProcess: array[1..MAXCLIENTSERVERCOUNT - 1] of TServerProcess;
     procedure ClientDropGold(ProcessMsg: pTProcessMessage; var boResult: Boolean);
@@ -797,6 +872,12 @@ type
     procedure ClearCenterMsg(nFlag: Integer);
     procedure RefIconInfo();
     function TakeOffItem(btWhere: Byte; nItemIdx: Integer; boClient, boForce: Boolean): Boolean;
+    
+    // 2011年新增功能方法
+    procedure ProcessTimerSystem();  // 处理定时器系统
+    procedure ProcessExpRateSystem(); // 处理经验倍率系统
+procedure CalculateStrengthenAttributes(); // 计算装备强化属性
+procedure ProcessPowerRateSystem(); // 处理攻击力倍率系统
   end;
   //{$ENDREGION}
 
@@ -837,6 +918,92 @@ begin
   m_ClickGuageNPCLabel := '';
   m_boMaster := False;
   m_dwMissionTime := GetTickCount + 60 * 60 * 1000;
+  
+  // 2011年新增功能初始化
+  // 初始化定时器系统
+  for i := 0 to 9 do begin
+    m_dwTimerStart[i] := 0;
+    m_dwTimerTime[i] := 0;
+    m_sTimerScript[i] := '';
+    m_boTimerActive[i] := False;
+  end;
+  
+  // 初始化经验倍率系统
+  m_nExpRate := 1;
+  m_dwExpRateTime := 0;
+  
+  // 初始化装备强化属性加成系统
+  m_nStrengthenHP := 0;
+  m_nStrengthenMP := 0;
+  m_nStrengthenAC := 0;
+  m_nStrengthenMAC := 0;
+  m_nStrengthenDC := 0;
+  m_nStrengthenMC := 0;
+  m_nStrengthenSC := 0;
+  
+  // 初始化装备操作相关
+  m_nHookItemIdx := -1;
+  
+  // 初始化攻击力倍率系统
+  m_nPowerRate := 1;
+  m_dwPowerRateTime := 0;
+  
+  // 初始化离线挂机系统
+  m_boOfflineMode := False;
+  m_dwOfflineStartTime := 0;
+  m_dwOfflineDuration := 0;
+  m_sOfflineMapName := '';
+  
+  // 初始化坐骑系统升级
+  m_nHorseLevel := 1;
+  FillChar(m_nHorseSkills, SizeOf(m_nHorseSkills), 0);
+  
+  // 初始化高级脚本命令扩展
+  FillChar(m_nPlayerFlags, SizeOf(m_nPlayerFlags), 0);
+  m_sPlayerData := TStringList.Create;
+  
+  // 初始化性能优化缓存系统
+  m_sCacheData := TStringList.Create;
+  m_sCacheExpire := TStringList.Create;
+  
+  // 初始化安全性增强日志系统
+  m_sLogData := TStringList.Create;
+  
+  // 初始化离线挂机收益计算
+  m_nOfflineExpRate := 100;
+  m_nOfflineGoldRate := 100;
+  m_nOfflineItemRate := 100;
+  m_nOfflineExpReward := 0;
+  m_nOfflineGoldReward := 0;
+  m_sOfflineItemReward := '';
+  
+  // 初始化装备品质特效的客户端显示
+  FillChar(m_nEquipEffects, SizeOf(m_nEquipEffects), 0);
+  FillChar(m_nEquipEffectLevels, SizeOf(m_nEquipEffectLevels), 0);
+  FillChar(m_nEquipEffectColors, SizeOf(m_nEquipEffectColors), 0);
+  
+  // 初始化高级脚本命令扩展
+  m_sScriptVariables := TStringList.Create;
+  m_sLoadedScripts := TStringList.Create;
+  
+  // 初始化插件系统开发
+  m_sLoadedPlugins := TStringList.Create;
+  FillChar(m_nPluginStatus, SizeOf(m_nPluginStatus), 0);
+  
+  // 初始化AI系统集成
+  m_nAIType := 0;
+  m_nAILevel := 0;
+  m_sAIParams := '';
+  FillChar(m_nAIState, SizeOf(m_nAIState), 0);
+  
+  // 初始化客户端界面优化
+  m_sUISettings := TStringList.Create;
+  
+  // 初始化网络通信优化
+  m_nNetworkMode := 0;
+  m_nNetworkTimeout := 5000;
+  m_nNetworkLatency := 0;
+  m_nNetworkPacketLoss := 0;
 
   m_ADListIndex := 0;
   m_nLongIceHitDouble := 0;
@@ -2493,8 +2660,164 @@ begin
 
   if (m_DareObject <> nil) and (m_DareObject.m_boGhost) then
     m_DareObject := nil;
+  
+  // 2011年新增功能 - 定时器检测机制
+  ProcessTimerSystem();
+  
+  // 2011年新增功能 - 经验倍率检测机制
+  ProcessExpRateSystem();
+  
+  // 2012年新增功能 - 装备强化属性计算
+  CalculateStrengthenAttributes();
+  
+  // 2012年新增功能 - 攻击力倍率检测机制
+  ProcessPowerRateSystem();
     
   inherited Run;
+end;
+
+// 2011年新增功能 - 定时器系统处理
+procedure TPlayObject.ProcessTimerSystem();
+var
+  i: Integer;
+  dwCurrentTime: LongWord;
+begin
+  dwCurrentTime := GetTickCount;
+  
+  for i := 0 to 9 do begin
+    if m_boTimerActive[i] and (m_dwTimerStart[i] > 0) and (m_dwTimerTime[i] > 0) then begin
+      if (dwCurrentTime - m_dwTimerStart[i]) >= m_dwTimerTime[i] then begin
+        // 定时器时间到，执行脚本
+        if (m_sTimerScript[i] <> '') and (g_FunctionNPC <> nil) then begin
+          try
+            NpcGotoLable(g_FunctionNPC, g_FunctionNPC.GetScriptIndex(m_sTimerScript[i]), False);
+          except
+            SysMsg('定时器 ' + IntToStr(i) + ' 执行脚本时发生错误', c_Red, t_Hint);
+          end;
+        end;
+        
+        // 重置定时器
+        m_boTimerActive[i] := False;
+        m_dwTimerStart[i] := 0;
+        m_dwTimerTime[i] := 0;
+        m_sTimerScript[i] := '';
+      end;
+    end;
+  end;
+end;
+
+// 2011年新增功能 - 经验倍率系统处理
+procedure TPlayObject.ProcessExpRateSystem();
+var
+  dwCurrentTime: LongWord;
+begin
+  dwCurrentTime := GetTickCount;
+  
+  // 检查经验倍率是否过期
+  if (m_dwExpRateTime > 0) and (dwCurrentTime > m_dwExpRateTime) then begin
+    m_nExpRate := 1;  // 恢复正常倍率
+    m_dwExpRateTime := 0;
+    SysMsg('经验倍率已恢复正常', c_Red, t_Hint);
+  end;
+end;
+
+// 计算装备强化属性加成
+procedure TPlayObject.CalculateStrengthenAttributes();
+var
+  i: Integer;
+  UserItem: pTUserItem;
+  StdItem: pTStdItem;
+  nStrengthenLevel: Integer;
+  nHPBonus, nMPBonus, nACBonus, nMACBonus, nDCBonus, nMCBonus, nSCBonus: Integer;
+begin
+  // 重置强化属性加成
+  m_nStrengthenHP := 0;
+  m_nStrengthenMP := 0;
+  m_nStrengthenAC := 0;
+  m_nStrengthenMAC := 0;
+  m_nStrengthenDC := 0;
+  m_nStrengthenMC := 0;
+  m_nStrengthenSC := 0;
+  
+  // 遍历所有装备位置
+  for i := 0 to 12 do begin
+    UserItem := @m_UseItems[i];
+    if UserItem.wIndex > 0 then begin
+      StdItem := UserEngine.GetStdItem(UserItem.wIndex);
+      if StdItem <> nil then begin
+        // 获取强化等级（使用temp1[0]存储）
+        nStrengthenLevel := UserItem.temp1[0];
+        if nStrengthenLevel > 0 then begin
+          // 根据装备类型计算属性加成
+          case StdItem.StdMode of
+            5, 6, 10, 11, 15: begin // 武器类
+              nDCBonus := nStrengthenLevel * 2; // 每级+2攻击
+              nMCBonus := nStrengthenLevel * 2; // 每级+2魔法
+              nSCBonus := nStrengthenLevel * 2; // 每级+2道术
+              Inc(m_nStrengthenDC, nDCBonus);
+              Inc(m_nStrengthenMC, nMCBonus);
+              Inc(m_nStrengthenSC, nSCBonus);
+            end;
+            7, 8, 9: begin // 衣服类
+              nACBonus := nStrengthenLevel * 3; // 每级+3防御
+              nMACBonus := nStrengthenLevel * 3; // 每级+3魔御
+              nHPBonus := nStrengthenLevel * 10; // 每级+10HP
+              nMPBonus := nStrengthenLevel * 10; // 每级+10MP
+              Inc(m_nStrengthenAC, nACBonus);
+              Inc(m_nStrengthenMAC, nMACBonus);
+              Inc(m_nStrengthenHP, nHPBonus);
+              Inc(m_nStrengthenMP, nMPBonus);
+            end;
+            19, 20, 21: begin // 项链类
+              nDCBonus := nStrengthenLevel * 1; // 每级+1攻击
+              nMCBonus := nStrengthenLevel * 1; // 每级+1魔法
+              nSCBonus := nStrengthenLevel * 1; // 每级+1道术
+              Inc(m_nStrengthenDC, nDCBonus);
+              Inc(m_nStrengthenMC, nMCBonus);
+              Inc(m_nStrengthenSC, nSCBonus);
+            end;
+            22, 23, 24: begin // 戒指类
+              nDCBonus := nStrengthenLevel * 1; // 每级+1攻击
+              nMCBonus := nStrengthenLevel * 1; // 每级+1魔法
+              nSCBonus := nStrengthenLevel * 1; // 每级+1道术
+              Inc(m_nStrengthenDC, nDCBonus);
+              Inc(m_nStrengthenMC, nMCBonus);
+              Inc(m_nStrengthenSC, nSCBonus);
+            end;
+            25, 26, 27: begin // 手镯类
+              nACBonus := nStrengthenLevel * 2; // 每级+2防御
+              nMACBonus := nStrengthenLevel * 2; // 每级+2魔御
+              Inc(m_nStrengthenAC, nACBonus);
+              Inc(m_nStrengthenMAC, nMACBonus);
+            end;
+            28, 29, 30: begin // 头盔类
+              nACBonus := nStrengthenLevel * 2; // 每级+2防御
+              nMACBonus := nStrengthenLevel * 2; // 每级+2魔御
+              nHPBonus := nStrengthenLevel * 5; // 每级+5HP
+              Inc(m_nStrengthenAC, nACBonus);
+              Inc(m_nStrengthenMAC, nMACBonus);
+              Inc(m_nStrengthenHP, nHPBonus);
+            end;
+          end;
+        end;
+      end;
+    end;
+  end;
+end;
+
+// 处理攻击力倍率系统
+procedure TPlayObject.ProcessPowerRateSystem();
+var
+  dwCurrentTime: LongWord;
+begin
+  dwCurrentTime := GetTickCount;
+  
+  // 检查攻击力倍率是否过期
+  if (m_dwPowerRateTime > 0) and (dwCurrentTime > m_dwPowerRateTime) then begin
+    m_nPowerRate := 1;  // 恢复正常倍率
+    m_dwPowerRateTime := 0;
+    SysMsg('攻击力倍率已恢复正常', c_Red, t_Hint);
+  end;
 end;
 
 procedure TPlayObject.ProcessSpiritSuite();
@@ -16535,6 +16858,16 @@ end;
 procedure TPlayObject.RecalcAbilitys;
 begin
   inherited RecalcAbilitys;
+  
+  // 应用装备强化属性加成
+  Inc(m_WAbil.HP, m_nStrengthenHP);
+  Inc(m_WAbil.MP, m_nStrengthenMP);
+  Inc(m_WAbil.AC, m_nStrengthenAC);
+  Inc(m_WAbil.MAC, m_nStrengthenMAC);
+  Inc(m_WAbil.DC, m_nStrengthenDC);
+  Inc(m_WAbil.MC, m_nStrengthenMC);
+  Inc(m_WAbil.SC, m_nStrengthenSC);
+  
   //RecalcAdjusBonus();
 end;
 

@@ -13,6 +13,14 @@ unit ClMain;
 5. *游戏界面--PlanScn.pas
 }
 
+// 安全相关常量定义
+const
+  MAX_PACKET_SIZE = 1024 * 1024;        // 最大数据包大小 1MB
+  MAX_BUFFER_SIZE = 2 * 1024 * 1024;    // 最大缓冲区大小 2MB
+  MAX_SAY_LENGTH = 200;                  // 最大聊天长度
+  MAX_PROCESS_COUNT = 1000;              // 最大处理循环次数
+  SOCKET_TIMEOUT = 30000;                // Socket超时时间 30秒
+
 interface
 
 uses
@@ -5953,6 +5961,22 @@ var
   data, data2: string;
 begin
   data := Socket.ReceiveText;
+  
+  // 检查接收数据大小
+  if Length(data) > MAX_PACKET_SIZE then begin
+    DebugOutStr('警告: 接收数据包过大: ' + IntToStr(Length(data)) + ' bytes');
+    Socket.Close;
+    Exit;
+  end;
+  
+  // 检查总缓冲区大小
+  if Length(SocStr) + Length(data) > MAX_BUFFER_SIZE then begin
+    DebugOutStr('警告: 缓冲区溢出风险，清空缓冲区');
+    SocStr := '';
+    Socket.Close;
+    Exit;
+  end;
+  
   //if pos('GOOD', data) > 0 then DScreen.AddSysMsg (data);
 
   n := pos(g_ClientCheck, data);
@@ -5997,7 +6021,7 @@ begin
       if CSocket.Socket.SendText(FSendSocketStr + sendstr) = -1 then
       begin
         FSendSocketStr := FSendSocketStr + sendstr;
-        if length(FSendSocketStr) > 1024 * 1024 then
+        if length(FSendSocketStr) > MAX_PACKET_SIZE then
           FSendSocketStr := '';
       end
       else
@@ -6354,12 +6378,54 @@ begin
   end;
 end;
 
+// 输入验证函数
+function ValidateInput(const sInput: string): Boolean;
+const
+  DANGERO_CHARS = ['<', '>', '"', '''', '&', ';', '(', ')', '{', '}', '[', ']', '\', '/', '|'];
+var
+  i: Integer;
+  c: Char;
+begin
+  Result := False;
+  
+  // 检查长度
+  if (Length(sInput) = 0) or (Length(sInput) > MAX_SAY_LENGTH) then
+    Exit;
+    
+  // 检查危险字符
+  for i := 1 to Length(sInput) do begin
+    c := sInput[i];
+    if c in DANGERO_CHARS then
+      Exit;
+  end;
+  
+  // 检查SQL注入和XSS攻击模式
+  if (Pos('script', LowerCase(sInput)) > 0) or
+     (Pos('javascript:', LowerCase(sInput)) > 0) or
+     (Pos('onload', LowerCase(sInput)) > 0) or
+     (Pos('onerror', LowerCase(sInput)) > 0) or
+     (Pos('union', LowerCase(sInput)) > 0) or
+     (Pos('select', LowerCase(sInput)) > 0) or
+     (Pos('insert', LowerCase(sInput)) > 0) or
+     (Pos('update', LowerCase(sInput)) > 0) or
+     (Pos('delete', LowerCase(sInput)) > 0) then
+    Exit;
+    
+  Result := True;
+end;
+
 var
   Msg: TDefaultMessage;
   tempstr: string[14];
   idx: Integer;
   saystr: string;
 begin
+  // 输入验证
+  if not ValidateInput(str) then begin
+    DebugOutStr('警告: 检测到可疑输入: ' + str);
+    Exit;
+  end;
+  
   saystr := str;
   if str <> '' then
   begin
