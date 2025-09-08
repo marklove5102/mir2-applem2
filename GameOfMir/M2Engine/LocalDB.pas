@@ -509,10 +509,14 @@ begin
     Query.SQL.Add(sSQLString);
     try
       Query.Open;
-    finally
-      Result := -2;
+      Result := 0;
+    except
+      on E: Exception do begin
+        MainOutMessage('[Error] LoadMagicDB: ' + E.Message);
+        Result := -2;
+        Exit;
+      end;
     end;
-    Result := 0;
     ClientStr := '';
     g_sMagicData := '';
     g_sMagicDataMD5 := '';
@@ -520,7 +524,7 @@ begin
     for i := 0 to Query.RecordCount - 1 do begin
       FillChar(ClientDefMagic, SizeOf(TClientDefMagic), #0);
       nIdx := Query.FieldByName('MagId').AsInteger;
-      if (nIdx > 0) and (nIdx < SKILL_MAX) then
+      if (nIdx > 0) and (nIdx < SKILL_MAX) and (nIdx <= High(UserEngine.m_MagicArr)) then
       begin
         Magic := @UserEngine.m_MagicArr[nIdx];
         Magic.wMagicId := nIdx;
@@ -573,11 +577,14 @@ begin
 
     OutLen := ZIPCompress(PChar(ClientStr), Length(ClientStr), 9, OutBuffer);
     if OutLen > 0 then begin
-      //MainOutmessage(IntToStr(OutLen));
-      g_nMagicDataLen := OutLen;
-      g_sMagicDataMD5 := GetMD5TextByBuffer(OutBuffer, OutLen);
-      g_sMagicData := EncodeLongBuffer(OutBuffer, OutLen);
-      FreeMem(OutBuffer);
+      try
+        //MainOutmessage(IntToStr(OutLen));
+        g_nMagicDataLen := OutLen;
+        g_sMagicDataMD5 := GetMD5TextByBuffer(OutBuffer, OutLen);
+        g_sMagicData := EncodeLongBuffer(OutBuffer, OutLen);
+      finally
+        FreeMem(OutBuffer);
+      end;
     end;
 
     Query.Close;

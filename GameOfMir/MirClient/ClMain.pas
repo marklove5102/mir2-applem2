@@ -5959,22 +5959,43 @@ procedure TfrmMain.CSocketRead(Sender: TObject; Socket: TCustomWinSocket);
 var
   n: Integer;
   data, data2: string;
+  nDataLen: Integer;
 begin
-  data := Socket.ReceiveText;
-  
-  // 检查接收数据大小
-  if Length(data) > MAX_PACKET_SIZE then begin
-    DebugOutStr('警告: 接收数据包过大: ' + IntToStr(Length(data)) + ' bytes');
-    Socket.Close;
-    Exit;
-  end;
-  
-  // 检查总缓冲区大小
-  if Length(SocStr) + Length(data) > MAX_BUFFER_SIZE then begin
-    DebugOutStr('警告: 缓冲区溢出风险，清空缓冲区');
-    SocStr := '';
-    Socket.Close;
-    Exit;
+  try
+    data := Socket.ReceiveText;
+    nDataLen := Length(data);
+    
+    // 检查数据包大小
+    if nDataLen > MAX_PACKET_SIZE then begin
+      DebugOutStr('安全警告: 接收数据包过大: ' + IntToStr(nDataLen) + ' bytes');
+      Socket.Close;
+      Exit;
+    end;
+    
+    // 检查数据包是否为空
+    if nDataLen = 0 then
+      Exit;
+    
+    // 检查缓冲区总大小
+    if Length(SocStr) + nDataLen > MAX_BUFFER_SIZE then begin
+      DebugOutStr('安全警告: 缓冲区即将溢出，重置缓冲区');
+      SocStr := '';
+      Socket.Close;
+      Exit;
+    end;
+    
+    // 检查数据包内容的有效性
+    if not ValidatePacketData(data) then begin
+      DebugOutStr('安全警告: 检测到可疑数据包内容');
+      Socket.Close;
+      Exit;
+    end;
+  except
+    on E: Exception do begin
+      DebugOutStr('网络读取异常: ' + E.Message);
+      Socket.Close;
+      Exit;
+    end;
   end;
   
   //if pos('GOOD', data) > 0 then DScreen.AddSysMsg (data);
@@ -6378,37 +6399,68 @@ begin
   end;
 end;
 
-// 输入验证函数
-function ValidateInput(const sInput: string): Boolean;
-const
-  DANGERO_CHARS = ['<', '>', '"', '''', '&', ';', '(', ')', '{', '}', '[', ']', '\', '/', '|'];
+// 数据包内容验证函数
+function ValidatePacketData(const sData: string): Boolean;
 var
   i: Integer;
   c: Char;
 begin
+  Result := True;
+  
+  // 检查是否包含过多的控制字符
+  for i := 1 to Length(sData) do begin
+    c := sData[i];
+    if (Ord(c) < 32) and (c <> #9) and (c <> #10) and (c <> #13) then begin
+      // 允许TAB、LF、CR，但不允许其他控制字符过多
+      if i > Length(sData) div 2 then begin
+        Result := False;
+        Exit;
+      end;
+    end;
+  end;
+end;
+
+// 增强的输入验证函数
+function ValidateInput(const sInput: string): Boolean;
+const
+  DANGEROUS_CHARS = ['<', '>', '"', '''', '&', ';', '(', ')', '{', '}', '[', ']', '\', '/', '|', #0..#31, #127..#255];
+  SQL_KEYWORDS: array[0..19] of string = (
+    'script', 'javascript:', 'onload', 'onerror', 'union', 'select', 
+    'insert', 'update', 'delete', 'drop', 'create', 'alter', 'exec',
+    'execute', 'sp_', 'xp_', '--', '/*', '*/', 'char('
+  );
+var
+  i, j: Integer;
+  c: Char;
+  sLowerInput: string;
+begin
   Result := False;
   
-  // 检查长度
+  // 检查空输入和长度
   if (Length(sInput) = 0) or (Length(sInput) > MAX_SAY_LENGTH) then
     Exit;
+  
+  // 检查是否包含NULL字符
+  if Pos(#0, sInput) > 0 then
+    Exit;
     
-  // 检查危险字符
+  // 检查危险字符（包括控制字符和扩展ASCII）
   for i := 1 to Length(sInput) do begin
     c := sInput[i];
-    if c in DANGERO_CHARS then
+    if c in DANGEROUS_CHARS then
       Exit;
   end;
   
-  // 检查SQL注入和XSS攻击模式
-  if (Pos('script', LowerCase(sInput)) > 0) or
-     (Pos('javascript:', LowerCase(sInput)) > 0) or
-     (Pos('onload', LowerCase(sInput)) > 0) or
-     (Pos('onerror', LowerCase(sInput)) > 0) or
-     (Pos('union', LowerCase(sInput)) > 0) or
-     (Pos('select', LowerCase(sInput)) > 0) or
-     (Pos('insert', LowerCase(sInput)) > 0) or
-     (Pos('update', LowerCase(sInput)) > 0) or
-     (Pos('delete', LowerCase(sInput)) > 0) then
+  // 检查SQL注入和脚本攻击模式
+  sLowerInput := LowerCase(sInput);
+  for j := Low(SQL_KEYWORDS) to High(SQL_KEYWORDS) do begin
+    if Pos(SQL_KEYWORDS[j], sLowerInput) > 0 then
+      Exit;
+  end;
+  
+  // 检查连续的特殊字符组合
+  if (Pos('--', sInput) > 0) or (Pos('/*', sInput) > 0) or 
+     (Pos('*/', sInput) > 0) or (Pos('@@', sInput) > 0) then
     Exit;
     
   Result := True;

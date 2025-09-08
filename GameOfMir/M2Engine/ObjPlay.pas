@@ -16980,6 +16980,14 @@ begin
   nEndX := m_nCurrX + m_nViewRange;
   nStartY := m_nCurrY - m_nViewRange;
   nEndY := m_nCurrY + m_nViewRange;
+  
+  // 边界检查优化
+  if nStartX < 0 then nStartX := 0;
+  if nStartY < 0 then nStartY := 0;
+  if (m_PEnvir <> nil) then begin
+    if nEndX >= m_PEnvir.m_nWidth then nEndX := m_PEnvir.m_nWidth - 1;
+    if nEndY >= m_PEnvir.m_nHeight then nEndY := m_PEnvir.m_nHeight - 1;
+  end;
   try
     nCheckCode := 7;
     for n18 := nStartX to nEndX do begin
