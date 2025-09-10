@@ -29,7 +29,7 @@ uses
   IntroScn, PlayScn, MapUnit, WIL, Grobal2, HGEFonts, DirectXGraphics, D3DX81mo,
   Actor, CliUtil, HUtil32, EDcodeEx, LShare,
   ClFunc, magiceff, SoundUtil, clEvent, Bass, DateUtils,
-  MShare, Share, jpeg, HGECanvas, RSA, SDK, Resource;
+  MShare, Share, jpeg, HGECanvas, RSA, SDK, Resource, MicroClient, ResourceChecker;
 
 type
   TLoginConnInfo = packed record
@@ -1029,6 +1029,14 @@ begin
     CreateDir(g_sPhotoDirname);
 
   Caption := g_sLogoText;
+  
+  // 检查客户端资源文件
+  if not CheckClientResources then begin
+    DebugOutStr('资源检查失败，客户端将退出');
+    Application.Terminate;
+    Exit;
+  end;
+  
   LoadWMImagesLib(nil);
 
   g_WMusicImages.FileName := MUSICFILE;
@@ -1251,6 +1259,20 @@ begin
   FrmDlg2 := TFrmDlg2.Create(nil);
   FrmDlg3 := TFrmDlg3.Create(nil);
   FrmDlg4 := TFrmDlg4.Create(nil);
+  
+  // 初始化微端系统
+  if InitializeMicroClient then begin
+    DebugOutStr('微端系统初始化成功');
+  end else begin
+    DebugOutStr('微端系统初始化失败');
+  end;
+  
+  // 初始化资源检查器
+  if InitializeResourceChecker then begin
+    DebugOutStr('资源检查器初始化成功');
+  end else begin
+    DebugOutStr('资源检查器初始化失败');
+  end;
 end;
 
 procedure TfrmMain.OnProgramException(Sender: TObject; E: Exception);
@@ -1535,6 +1557,14 @@ begin
   HGE.System_Shutdown;
   g_DXFont.Free;
   HGE := nil;
+  
+  // 清理微端系统
+  FinalizeMicroClient;
+  DebugOutStr('微端系统已清理');
+  
+  // 清理资源检查器
+  FinalizeResourceChecker;
+  DebugOutStr('资源检查器已清理');
 end;
 
 function ComposeColor(Dest, Src: TRGBQuad; Percent: Integer): TRGBQuad;
