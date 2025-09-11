@@ -3357,6 +3357,10 @@ var
   g_UnFriendList: TStringList;
   g_SetItemsList: TList;
   g_SetItemsArr: array of Boolean;
+  
+  // 增强套装系统全局变量
+  g_EnhancedSetItemsList: TList;  // 增强套装列表
+  g_boUseEnhancedSuite: Boolean;  // 是否启用增强套装系统
 
   n4EBBD0: Integer;
 
@@ -16724,6 +16728,10 @@ initialization
     ExpConf := TIniFile.Create(sExpConfigFileName);
     GlobalConf := TIniFile.Create(sGlobalFileName);
     Move(ColorArray, ColorTable, SizeOf(ColorArray));
+    
+    // 初始化增强套装系统
+    g_EnhancedSetItemsList := TList.Create;
+    g_boUseEnhancedSuite := False;
 {$IFDEF PLUGOPEN}
     nIPLocal := AddToPulgProcTable(DeCodeString('Z>Pq>mHDF^PbE<'), 0);
     nFriendModule := AddToPulgProcTable('SetFriend', 0);
@@ -16741,6 +16749,16 @@ finalization
     StringConf.Free;
     ExpConf.Free;
     GlobalConf.Free;
+    
+    // 清理增强套装系统
+    if g_EnhancedSetItemsList <> nil then begin
+      // 释放所有增强套装数据
+      for var i := 0 to g_EnhancedSetItemsList.Count - 1 do begin
+        Dispose(pTEnhancedSetItems(g_EnhancedSetItemsList[i]));
+      end;
+      g_EnhancedSetItemsList.Free;
+      g_EnhancedSetItemsList := nil;
+    end;
   end;
 end.
 

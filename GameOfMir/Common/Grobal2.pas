@@ -53,6 +53,24 @@ $80000000  }
   CanStrengthenArr: array[0..6] of Byte = (0, 3, 6, 9, 12, 15, 18);
   CanStrengthenMax: array[0..5] of Byte = (16, 20, 21, 15, 24, 6);
 
+  // 套装属性类型常量
+  SUITE_ATTR_AC       = 0;   // 物理防御
+  SUITE_ATTR_MAC      = 1;   // 魔法防御
+  SUITE_ATTR_DC       = 2;   // 物理攻击
+  SUITE_ATTR_MC       = 3;   // 魔法攻击
+  SUITE_ATTR_HP       = 4;   // 生命值
+  SUITE_ATTR_MP       = 5;   // 魔法值
+  SUITE_ATTR_HIT      = 6;   // 命中
+  SUITE_ATTR_SPEED    = 7;   // 攻击速度
+  SUITE_ATTR_SC       = 8;   // 道术
+  SUITE_ATTR_LUCKY    = 9;   // 幸运
+  SUITE_ATTR_CURSE    = 10;  // 诅咒
+  SUITE_ATTR_ANTIMAGIC = 11; // 魔法躲避
+  SUITE_ATTR_POISONRECOVER = 12; // 中毒恢复
+  SUITE_ATTR_HEALTHRECOVER = 13; // 体力恢复
+  SUITE_ATTR_SPELLRECOVER = 14;  // 魔法恢复
+  SUITE_ATTR_ANTIPOISON = 15;    // 毒物躲避
+
   MAXPATHLEN = 255;
   DIRPATHLEN = 80;
   MapNameLen = 16;
@@ -2869,6 +2887,41 @@ type
     Value: array[0..30] of Word;
     HideValue: Boolean;
   end;
+
+  // 套装数量效果项
+  pTSuiteCountEffect = ^TSuiteCountEffect;
+  TSuiteCountEffect = packed record
+    nRequiredCount: Byte;                    // 需要装备数量
+    sEffectHint: string[100];               // 效果描述
+    Value: array[0..30] of Word;            // 属性加成值
+    boEnabled: Boolean;                     // 是否启用此等级效果
+  end;
+
+  // 增强套装定义
+  pTEnhancedSetItems = ^TEnhancedSetItems;
+  TEnhancedSetItems = packed record
+    sHint: string[50];                                          // 套装名称
+    Items: array[Low(THumanUseItems)..High(THumanUseItems)] of string[14]; // 装备名称数组
+    nTotalCount: Byte;                                          // 套装总数量
+    boUseCountEffect: Boolean;                                  // 是否启用数量效果
+    CountEffects: array[0..MAXUSEITEMS-1] of TSuiteCountEffect; // 数量效果数组 (支持最多16个层级)
+    // 保持兼容性
+    Value: array[0..30] of Word;                                // 传统全套装属性加成
+    HideValue: Boolean;                                         // 是否隐藏数值
+  end;
+
+  // 玩家套装状态
+  pTPlayerSuiteStatus = ^TPlayerSuiteStatus;
+  TPlayerSuiteStatus = packed record
+    nSuiteIndex: Integer;                   // 套装索引
+    nEquippedCount: Byte;                   // 已装备数量
+    nActiveEffectLevel: Byte;               // 当前生效等级索引
+    boFullSuiteActive: Boolean;             // 全套装是否生效
+    EquippedItems: array[0..14] of Boolean; // 各部位装备状态
+  end;
+
+  // 玩家所有套装状态
+  TPlayerAllSuitesStatus = array[0..99] of TPlayerSuiteStatus;
 
   TSaveRcd = packed record
     sAccount: string[20];

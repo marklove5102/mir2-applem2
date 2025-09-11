@@ -463,6 +463,9 @@ type
     m_nAILevel: Integer;                        // AI等级
     m_sAIParams: string;                        // AI参数
     m_nAIState: array[0..9] of Integer;         // AI状态数组
+    
+    // 增强套装系统
+    m_SuitesStatus: TPlayerAllSuitesStatus;     // 所有套装状态
   private
     FServerProcess: array[1..MAXCLIENTSERVERCOUNT - 1] of TServerProcess;
     procedure ClientDropGold(ProcessMsg: pTProcessMessage; var boResult: Boolean);
@@ -607,6 +610,15 @@ type
     procedure ProcessSpiritSuite;
     procedure RecalcBagCount;
     procedure CheckSpeedCount(var nCount: Integer; sHitName: string);
+    
+    // 增强套装系统相关方法
+    function CheckSuiteCount(nSuiteIndex: Integer): Integer;
+    function GetActiveSuiteLevel(SetItem: pTEnhancedSetItems; nCount: Integer): Integer;
+    procedure CalcEnhancedSuiteEffects;
+    procedure ApplySuiteCountEffect(SetItem: pTEnhancedSetItems; nLevel: Integer);
+    procedure ApplyFullSuiteEffect(SetItem: pTEnhancedSetItems);
+    procedure ApplySuiteAttribute(nAttrType: Integer; nValue: Word);
+    procedure SendSuiteStatus;
     function HorseRunTo(btDir: Byte; boFlag: Boolean): Boolean;
         //procedure ClientGetTaxisList(nIdx, njob, nPage: integer);
 
@@ -995,6 +1007,9 @@ begin
   m_nAILevel := 0;
   m_sAIParams := '';
   FillChar(m_nAIState, SizeOf(m_nAIState), 0);
+  
+  // 初始化增强套装状态
+  FillChar(m_SuitesStatus, SizeOf(m_SuitesStatus), 0);
   
   // 初始化客户端界面优化
   m_sUISettings := TStringList.Create;
@@ -16887,6 +16902,11 @@ begin
   Inc(m_WAbil.MC, m_nStrengthenMC);
   Inc(m_WAbil.SC, m_nStrengthenSC);
   
+  // 应用增强套装系统效果
+  if g_boUseEnhancedSuite then begin
+    CalcEnhancedSuiteEffects;
+  end;
+  
   //RecalcAdjusBonus();
 end;
 
@@ -19215,6 +19235,186 @@ begin
   // 光柱消息处理 - 这个函数主要用于处理客户端发送的光柱相关消息
   // 目前服务端不需要特殊处理，因为光柱效果是在物品掉落时自动发送的
   boResult := True;
+end;
+
+// ========== 增强套装系统方法实现 ==========
+
+function TPlayObject.CheckSuiteCount(nSuiteIndex: Integer): Integer;
+var
+  i: Integer;
+  nCount: Integer;
+  StdItem: pTStdItem;
+  SetItem: pTEnhancedSetItems;
+begin
+  Result := 0;
+  if (nSuiteIndex < 0) or (nSuiteIndex >= g_EnhancedSetItemsList.Count) then
+    Exit;
+    
+  SetItem := g_EnhancedSetItemsList[nSuiteIndex];
+  nCount := 0;
+  
+  // 检测每个装备位置
+  for i := Low(THumanUseItems) to High(THumanUseItems) do begin
+    if (m_UseItems[i].wIndex > 0) and (m_UseItems[i].Dura > 0) then begin
+      StdItem := UserEngine.GetStdItem(m_UseItems[i].wIndex);
+      if StdItem <> nil then begin
+        // 检查是否是套装中的装备
+        if SetItem.Items[i] <> '' then begin
+          if CompareText(UserEngine.GetStdItemName(m_UseItems[i].wIndex), SetItem.Items[i]) = 0 then begin
+            Inc(nCount);
+          end;
+        end;
+      end;
+    end;
+  end;
+  
+  Result := nCount;
+end;
+
+function TPlayObject.GetActiveSuiteLevel(SetItem: pTEnhancedSetItems; nCount: Integer): Integer;
+var
+  i: Integer;
+  nMaxLevel: Integer;
+begin
+  Result := -1;
+  nMaxLevel := 0;
+  
+  // 从高到低检查哪个等级可以生效
+  for i := High(SetItem.CountEffects) downto Low(SetItem.CountEffects) do begin
+    if SetItem.CountEffects[i].boEnabled and (nCount >= SetItem.CountEffects[i].nRequiredCount) then begin
+      if SetItem.CountEffects[i].nRequiredCount > nMaxLevel then begin
+        nMaxLevel := SetItem.CountEffects[i].nRequiredCount;
+        Result := i;
+      end;
+    end;
+  end;
+end;
+
+procedure TPlayObject.CalcEnhancedSuiteEffects;
+var
+  i: Integer;
+  SetItem: pTEnhancedSetItems;
+  SuiteStatus: pTPlayerSuiteStatus;
+  nActiveLevel: Integer;
+begin
+  // 重置套装状态
+  FillChar(m_SuitesStatus, SizeOf(m_SuitesStatus), 0);
+  
+  // 检测每个套装
+  for i := 0 to g_EnhancedSetItemsList.Count - 1 do begin
+    SetItem := g_EnhancedSetItemsList[i];
+    SuiteStatus := @m_SuitesStatus[i];
+    
+    SuiteStatus.nSuiteIndex := i;
+    SuiteStatus.nEquippedCount := CheckSuiteCount(i);
+    
+    if SetItem.boUseCountEffect then begin
+      // 启用数量效果模式
+      nActiveLevel := GetActiveSuiteLevel(SetItem, SuiteStatus.nEquippedCount);
+      SuiteStatus.nActiveEffectLevel := nActiveLevel;
+      
+      // 应用对应等级的效果
+      if nActiveLevel >= 0 then begin
+        ApplySuiteCountEffect(SetItem, nActiveLevel);
+      end;
+    end else begin
+      // 传统全套装模式
+      if SuiteStatus.nEquippedCount = SetItem.nTotalCount then begin
+        SuiteStatus.boFullSuiteActive := True;
+        ApplyFullSuiteEffect(SetItem);
+      end;
+    end;
+  end;
+end;
+
+procedure TPlayObject.ApplySuiteCountEffect(SetItem: pTEnhancedSetItems; nLevel: Integer);
+var
+  i: Integer;
+  Effect: pTSuiteCountEffect;
+begin
+  if (nLevel < Low(SetItem.CountEffects)) or (nLevel > High(SetItem.CountEffects)) then
+    Exit;
+    
+  Effect := @SetItem.CountEffects[nLevel];
+  if not Effect.boEnabled then
+    Exit;
+    
+  // 应用属性加成
+  for i := Low(Effect.Value) to High(Effect.Value) do begin
+    if Effect.Value[i] > 0 then begin
+      ApplySuiteAttribute(i, Effect.Value[i]);
+    end;
+  end;
+end;
+
+procedure TPlayObject.ApplyFullSuiteEffect(SetItem: pTEnhancedSetItems);
+var
+  i: Integer;
+begin
+  // 应用传统全套装属性加成
+  for i := Low(SetItem.Value) to High(SetItem.Value) do begin
+    if SetItem.Value[i] > 0 then begin
+      ApplySuiteAttribute(i, SetItem.Value[i]);
+    end;
+  end;
+end;
+
+procedure TPlayObject.ApplySuiteAttribute(nAttrType: Integer; nValue: Word);
+begin
+  case nAttrType of
+    SUITE_ATTR_AC:    Inc(m_WAbil.AC, nValue);
+    SUITE_ATTR_MAC:   Inc(m_WAbil.MAC, nValue);
+    SUITE_ATTR_DC:    Inc(m_WAbil.DC, nValue);
+    SUITE_ATTR_MC:    Inc(m_WAbil.MC, nValue);
+    SUITE_ATTR_HP:    Inc(m_WAbil.HP, nValue);
+    SUITE_ATTR_MP:    Inc(m_WAbil.MP, nValue);
+    SUITE_ATTR_HIT:   Inc(m_WAbil.Hit, nValue);
+    SUITE_ATTR_SPEED: Inc(m_WAbil.Speed, nValue);
+    SUITE_ATTR_SC:    Inc(m_WAbil.SC, nValue);
+    SUITE_ATTR_LUCKY: Inc(m_btLucky, nValue);
+    SUITE_ATTR_CURSE: Inc(m_btCurse, nValue);
+    SUITE_ATTR_ANTIMAGIC: Inc(m_nAntiMagic, nValue);
+    SUITE_ATTR_POISONRECOVER: Inc(m_nPoisonRecover, nValue);
+    SUITE_ATTR_HEALTHRECOVER: Inc(m_nHealthRecover, nValue);
+    SUITE_ATTR_SPELLRECOVER: Inc(m_nSpellRecover, nValue);
+    SUITE_ATTR_ANTIPOISON: Inc(m_nAntiPoison, nValue);
+  end;
+end;
+
+procedure TPlayObject.SendSuiteStatus;
+var
+  i: Integer;
+  sSendMsg, sStr: string;
+  SetItem: pTEnhancedSetItems;
+  SuiteStatus: pTPlayerSuiteStatus;
+begin
+  sSendMsg := '';
+  
+  for i := 0 to g_EnhancedSetItemsList.Count - 1 do begin
+    SetItem := g_EnhancedSetItemsList[i];
+    SuiteStatus := @m_SuitesStatus[i];
+    
+    if SuiteStatus.nEquippedCount > 0 then begin
+      sStr := IntToStr(i) + '|' +                           // 套装索引
+              IntToStr(SuiteStatus.nEquippedCount) + '|' +   // 已装备数量
+              IntToStr(SetItem.nTotalCount) + '|' +          // 总数量
+              IntToStr(Byte(SetItem.boUseCountEffect)) + '|' + // 是否启用数量效果
+              IntToStr(SuiteStatus.nActiveEffectLevel) + '|' + // 当前生效等级
+              SetItem.sHint + '|';                           // 套装名称
+              
+      // 添加效果描述
+      if SetItem.boUseCountEffect and (SuiteStatus.nActiveEffectLevel >= 0) then begin
+        sStr := sStr + SetItem.CountEffects[SuiteStatus.nActiveEffectLevel].sEffectHint;
+      end;
+      
+      sSendMsg := sSendMsg + EncodeString(sStr) + '/';
+    end;
+  end;
+  
+  if sSendMsg <> '' then begin
+    m_DefMsg := MakeDefaultMsg(SM_SUITE_STATUS, 0, 0, 0, 0);
+    SendSocket(@m_DefMsg, sSendMsg);
+  end;
 end;
 
 end.
